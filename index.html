@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VK Mini Client</title>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--tg-theme-bg-color, #ffffff);
+      color: var(--tg-theme-text-color, #111111);
+    }
+
+    .app {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin-top: 30px;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      opacity: 0.65;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      padding: 20px;
+      border-radius: 18px;
+      background: var(--tg-theme-secondary-bg-color, #f1f1f1);
+      margin-bottom: 20px;
+    }
+
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 14px;
+      padding: 16px;
+      font-size: 17px;
+      font-weight: 600;
+      background: #447bff;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    #status {
+      margin-top: 15px;
+      text-align: center;
+      opacity: 0.7;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app">
+
+    <h1>VK Mini Client</h1>
+
+    <div class="subtitle">
+      VK внутри Telegram
+    </div>
+
+    <div class="card">
+      <h2>Добро пожаловать 👋</h2>
+      <p>
+        Здесь будет наш клиент VK,
+        работающий внутри Telegram Mini App.
+      </p>
+
+      <button onclick="connectVK()">
+        Войти через VK ID
+      </button>
+
+      <div id="status">
+        Готов к подключению
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+
+    tg.ready();
+    tg.expand();
+
+    function connectVK() {
+      document.getElementById("status").textContent =
+        "Подключение VK ID будет добавлено следующим шагом...";
+    }
+  </script>
+
+</body>
+</html>
