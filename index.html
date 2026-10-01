@@ -298,13 +298,15 @@
 
 
       } catch (err) {
+  console.error(err);
 
-        console.error(err);
-
-        status.textContent =
-          "Ошибка авторизации VK ID";
-
-      }
+  status.textContent =
+    "Ошибка: " +
+    (err?.message ||
+      err?.error ||
+      err?.code ||
+      JSON.stringify(err));
+}
 
     }
 
