@@ -1,15 +1,30 @@
 export default function handler(req, res) {
-  const { code, state, device_id, error, error_description } = req.query;
-
   const params = new URLSearchParams();
 
-  if (code) params.set("code", code);
-  if (state) params.set("state", state);
-  if (device_id) params.set("device_id", device_id);
-  if (error) params.set("error", error);
-  if (error_description) {
-    params.set("error_description", error_description);
+  const allowed = [
+    "code",
+    "device_id",
+    "state",
+    "type",
+    "expires_in",
+    "error",
+    "error_description"
+  ];
+
+  for (const key of allowed) {
+    const value = req.query?.[key];
+
+    if (value !== undefined && value !== null) {
+      params.set(key, String(value));
+    }
   }
 
-  res.redirect(302, `/?${params.toString()}`);
+  const target =
+    "https://vk-mini-client.vercel.app/?" + params.toString();
+
+  res.writeHead(302, {
+    Location: target
+  });
+
+  res.end();
 }
