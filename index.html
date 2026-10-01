@@ -3,9 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>VK Mini Client</title>
 
+  <!-- Telegram Mini App -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <!-- VK ID SDK -->
+  <script src="https://unpkg.com/@vkid/sdk@<3.0.0/dist-sdk/umd/index.js"></script>
 
   <style>
     * {
@@ -65,6 +70,31 @@
       opacity: 0.7;
       font-size: 14px;
     }
+
+    #profile {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: block;
+      margin: 0 auto 15px;
+    }
+
+    .name {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .id {
+      text-align: center;
+      opacity: 0.6;
+      margin-top: 5px;
+    }
   </style>
 </head>
 
@@ -79,33 +109,228 @@
     </div>
 
     <div class="card">
+
       <h2>Добро пожаловать 👋</h2>
+
       <p>
-        Здесь будет наш клиент VK,
-        работающий внутри Telegram Mini App.
+        Авторизуйтесь через VK ID,
+        чтобы продолжить.
       </p>
 
-      <button onclick="connectVK()">
+      <button id="vkButton">
         Войти через VK ID
       </button>
 
       <div id="status">
         Готов к подключению
       </div>
+
+      <div id="profile">
+
+        <img id="avatar" class="avatar" src="" alt="">
+
+        <div id="name" class="name"></div>
+
+        <div id="userId" class="id"></div>
+
+      </div>
+
     </div>
 
   </div>
 
   <script>
+
+    // Telegram
     const tg = window.Telegram.WebApp;
 
     tg.ready();
     tg.expand();
 
-    function connectVK() {
-      document.getElementById("status").textContent =
-        "Подключение VK ID будет добавлено следующим шагом...";
+
+    // VK ID
+    const VKID = window.VKIDSDK;
+
+    const APP_ID = 54798745;
+
+    const REDIRECT_URL =
+      "https://vk-mini-client.vercel.app/api/auth/vk/callback";
+
+
+    // Создаём параметры для PKCE
+    function randomString(length = 64) {
+
+      const chars =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
+
+      let result = "";
+
+      const array = new Uint8Array(length);
+
+      crypto.getRandomValues(array);
+
+      for (let i = 0; i < length; i++) {
+        result += chars[array[i] % chars.length];
+      }
+
+      return result;
     }
+
+
+    const state = randomString(32);
+
+    const codeVerifier = randomString(64);
+
+
+    // Настройка VK ID
+    VKID.Config.init({
+
+      app: APP_ID,
+
+      redirectUrl: REDIRECT_URL,
+
+      state: state,
+
+      codeVerifier: codeVerifier,
+
+      scope: "email phone",
+
+      mode: VKID.ConfigAuthMode.Redirect
+
+    });
+
+
+    const button =
+      document.getElementById("vkButton");
+
+    const status =
+      document.getElementById("status");
+
+
+    // Проверяем, вернулся ли пользователь от VK
+    async function handleVKCallback() {
+
+      const params =
+        new URLSearchParams(window.location.search);
+
+      const code =
+        params.get("code");
+
+      const deviceId =
+        params.get("device_id");
+
+      const error =
+        params.get("error");
+
+
+      if (error) {
+
+        status.textContent =
+          "Ошибка VK ID: " + error;
+
+        return;
+
+      }
+
+
+      if (!code || !deviceId) {
+
+        return;
+
+      }
+
+
+      status.textContent =
+        "Получаем данные VK...";
+
+
+      try {
+
+        const token =
+          await VKID.Auth.exchangeCode(
+            code,
+            deviceId
+          );
+
+
+        const user =
+          await VKID.Auth.userInfo(
+            token.access_token
+          );
+
+
+        document.getElementById("profile").style.display =
+          "block";
+
+
+        document.getElementById("name").textContent =
+          [user.user?.first_name, user.user?.last_name]
+            .filter(Boolean)
+            .join(" ") || "Пользователь VK";
+
+
+        document.getElementById("userId").textContent =
+          user.user?.user_id
+            ? "VK ID: " + user.user.user_id
+            : "";
+
+
+        if (user.user?.avatar) {
+
+          document.getElementById("avatar").src =
+            user.user.avatar;
+
+        }
+
+
+        button.style.display = "none";
+
+        status.textContent =
+          "Авторизация выполнена ✅";
+
+
+        // Убираем code из адресной строки
+        window.history.replaceState(
+          {},
+          document.title,
+          window.location.pathname
+        );
+
+
+      } catch (err) {
+
+        console.error(err);
+
+        status.textContent =
+          "Ошибка авторизации VK ID";
+
+      }
+
+    }
+
+
+    // Кнопка входа
+    button.addEventListener("click", () => {
+
+      status.textContent =
+        "Переходим в VK ID...";
+
+      VKID.Auth.login()
+        .catch((error) => {
+
+          console.error(error);
+
+          status.textContent =
+            "Не удалось открыть VK ID";
+
+        });
+
+    });
+
+
+    // Запуск проверки callback
+    handleVKCallback();
+
   </script>
 
 </body>
