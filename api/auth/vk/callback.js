@@ -26,5 +26,5 @@ export default function handler(req, res) {
     Location: target
   });
 
-  res.end()
+  res.end();
 }
