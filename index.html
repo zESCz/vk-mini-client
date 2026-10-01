@@ -179,8 +179,10 @@
 
     const state = randomString(32);
 
-    const codeVerifier = randomString(64);
+    const codeVerifier =
+  sessionStorage.getItem("vk_code_verifier") || randomString(64);
 
+sessionStorage.setItem("vk_code_verifier", codeVerifier);
 
     // Настройка VK ID
     VKID.Config.init({
