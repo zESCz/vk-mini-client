@@ -1,6 +1,7 @@
 export default async function handler(req, res) {
   try {
     const { code, device_id, code_verifier } = req.body || {};
+    console.log("VK exchange request received");
 
     if (!code || !device_id || !code_verifier) {
       return res.status(400).json({
