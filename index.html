@@ -265,25 +265,6 @@ const token = await response.json();
 if (!response.ok) {
   throw new Error(token.error || "Ошибка обмена кода");
 }
-const meResponse = await fetch("/api/vk/me", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    access_token: token.access_token
-  })
-});
-
-const meData = await meResponse.json();
-
-if (!meResponse.ok || meData.error) {
-  throw new Error(
-    meData.error?.error_msg ||
-    meData.error ||
-    "Ошибка VK API"
-  );
-}
 
 status.textContent = "Код VK успешно обменян...";
 
