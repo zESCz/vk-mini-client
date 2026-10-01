@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+го<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
@@ -248,12 +248,25 @@ sessionStorage.setItem("vk_code_verifier", codeVerifier);
 
       try {
 
-        const token =
-          await VKID.Auth.exchangeCode(
-            code,
-            deviceId
-          );
-          status.textContent = "Код VK успешно обменян. Получаем профиль...";
+        const response = await fetch("/api/auth/exchange", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    code,
+    device_id: deviceId,
+    code_verifier: sessionStorage.getItem("vk_code_verifier")
+  })
+});
+
+const token = await response.json();
+
+if (!response.ok) {
+  throw new Error(token.error || "Ошибка обмена кода");
+}
+
+status.textContent = "Код VK успешно обменян...";
 
 
         const user =
