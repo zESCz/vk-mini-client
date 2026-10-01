@@ -269,10 +269,18 @@ if (!response.ok) {
 status.textContent = "Код VK успешно обменян...";
 
 
-        const user =
-          await VKID.Auth.userInfo(
-            token.access_token
-          );
+        let user;
+
+try {
+  user = await VKID.Auth.userInfo(
+    token.access_token
+  );
+} catch (e) {
+  throw new Error(
+    "Ошибка userInfo: " +
+    (e?.message || JSON.stringify(e))
+  );
+}
 
 
         document.getElementById("profile").style.display =
