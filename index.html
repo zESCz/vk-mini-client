@@ -845,7 +845,10 @@ document.getElementById("loginButton").addEventListener("click", () => {
 
 
     const status = document.getElementById("status");
-
+document.getElementById("status").textContent =
+  document.getElementById("loginButton")
+    ? "КНОПКА НАЙДЕНА"
+    : "КНОПКА НЕ НАЙДЕНА";
 
     function randomString(length = 32) {
 
