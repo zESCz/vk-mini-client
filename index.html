@@ -909,29 +909,18 @@ const VKID = window.VKIDSDK;
     ========================= */
 
     document
-      .getElementById("loginButton")
-      .addEventListener("click", async () => {
+  .getElementById("loginButton")
+  .addEventListener("click", async () => {
+    try {
+      status.textContent = "Открываем VK ID…";
 
-        try {
-  status.textContent = "ОБРАБОТЧИК РАБОТАЕТ";
-
-  setTimeout(() => {
-    status.textContent = "ПРОШЁЛ КЛИК";
-  }, 1500);
-
-} catch (error) {
-  status.textContent = "ОШИБКА";
-}
-
-        } catch (error) {
-
-          status.textContent =
-            "Ошибка: " +
-            (error?.message || "не удалось открыть VK ID");
-
-        }
-
-      });
+      await window.VKIDSDK.Auth.login();
+    } catch (error) {
+      status.textContent =
+        "Ошибка: " +
+        (error?.message || "не удалось открыть VK ID");
+    }
+  });
 
 
     /* =========================
