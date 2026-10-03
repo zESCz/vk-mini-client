@@ -1072,7 +1072,38 @@ const VKID = window.VKIDSDK;
       const avatar =
         profile?.avatar || "";
 
+const friendsResponse = await fetch(
+  "https://api.vk.ru/method/friends.get?" +
+  new URLSearchParams({
+    access_token: token.access_token,
+    v: "5.199",
+    fields: "photo_200,first_name,last_name"
+  })
+);
 
+const friendsData = await friendsResponse.json();
+
+const friendsList =
+  document.getElementById("friendsList");
+
+if (friendsData.response?.items) {
+  friendsList.innerHTML =
+    friendsData.response.items
+      .map(friend => `
+        <div class="friend-card">
+          <img src="${friend.photo_200 || ""}" class="friend-avatar">
+          <div class="friend-info">
+            <div class="friend-name">
+              ${friend.first_name || ""} ${friend.last_name || ""}
+            </div>
+          </div>
+        </div>
+      `)
+      .join("");
+} else {
+  friendsList.textContent =
+    "Не удалось загрузить друзей";
+}
       document.getElementById(
         "name"
       ).textContent =
