@@ -815,7 +815,9 @@
 
   <script>
   document.getElementById("status").textContent = "JS ЗАПУЩЕН";
-
+document.getElementById("loginButton").addEventListener("click", () => {
+  document.getElementById("status").textContent = "НОВЫЙ ОБРАБОТЧИК РАБОТАЕТ";
+});
     /* =========================
        TELEGRAM
     ========================= */
