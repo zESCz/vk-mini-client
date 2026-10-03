@@ -878,8 +878,8 @@ document.getElementById("status").textContent =
       codeVerifier
     );
 
-const VKID = window.VKIDSDK;
-    VKID.Config.init({
+window.VKIDSDK = window.VKIDSDK;
+    window.VKIDSDK.Config.init({
 
       app: APP_ID,
 
@@ -895,7 +895,7 @@ const VKID = window.VKIDSDK;
       scope: "email phone friends",
 
       mode:
-        VKID.ConfigAuthMode.Redirect
+        window.VKIDSDK.ConfigAuthMode.Redirect
 
     });
 
