@@ -517,7 +517,7 @@ pointer-events: auto;
         VK внутри Telegram.<br>
         Авторизуйтесь через VK ID, чтобы продолжить.
       </p>
-      <button id="loginButton" class="login-button" onclick="window.VKIDSDK.Auth.login();">
+      <button id="loginButton" class="login-button" onclick="event.stopImmediatePropagation(); document.getElementById('status').textContent='APP=' + window.VKIDSDK.Config.get().app;"
   Войти через VK ID
 </button>
 
