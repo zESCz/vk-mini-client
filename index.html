@@ -912,12 +912,15 @@
       .addEventListener("click", async () => {
 
         try {
-          status.textContent = "КНОПКА НАЖАТА";
+  status.textContent = "ОБРАБОТЧИК РАБОТАЕТ";
 
-          status.textContent =
-            "Открываем VK ID…";
+  setTimeout(() => {
+    status.textContent = "ПРОШЁЛ КЛИК";
+  }, 1500);
 
-          await VKID.Auth.login();
+} catch (error) {
+  status.textContent = "ОШИБКА";
+}
 
         } catch (error) {
 
