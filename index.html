@@ -1,1275 +1,991 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
-  >
-
-  <title>VK Mini Client</title>
-
-  <!-- Telegram Mini App -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-  <!-- VK ID SDK -->
+<meta charset="UTF-8">
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1, maximum-scale=1, viewport-
+fit=cover"
+>
+<title>VK Mini Client</title>
+<!-- Telegram Mini App -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<!-- VK ID SDK -->
 <script src="https://unpkg.com/@vkid/sdk@2.6.1/dist-sdk/umd/index.js"></script>
+<style>
+* {
+box-sizing: border-box;
+-webkit-tap-highlight-color: transparent;
+}
+:root {
+--blue: #447bff;
+--blue-dark: #3467e8;
+--bg: #f2f3f5;
+--card: #ffffff;
+--text: #111111;
+--secondary: #818c99;
+--line: #e5e7eb;
+}
+html,
+body {
+margin: 0;
+padding: 0;
+min-height: 100%;
+background: var(--bg);
+color: var(--text);
+font-family:
+-apple-system,
+BlinkMacSystemFont,
+"SF Pro Display",
+"SF Pro Text",
+Arial,
+sans-serif;
+}
+body {
+min-height: 100vh;
+padding-top: env(safe-area-inset-top);
+padding-bottom: env(safe-area-inset-bottom);
+}
+button {
+font: inherit;
+}
+.app {
+width: 100%;
+max-width: 560px;
 
-  <style>
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+margin: 0 auto;
+min-height: 100vh;
+padding-bottom: 92px;
+}
+/* HEADER */
+.topbar {
+position: sticky;
+top: 0;
+z-index: 20;
+height: 64px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 0 16px;
+background: rgba(242, 243, 245, 0.92);
+backdrop-filter: blur(18px);
+-webkit-backdrop-filter: blur(18px);
+}
+.logo {
+display: flex;
+align-items: center;
+gap: 9px;
+font-size: 21px;
+font-weight: 750;
+letter-spacing: -0.5px;
+}
+.logo-mark {
+width: 32px;
+height: 32px;
+border-radius: 10px;
+display: flex;
+align-items: center;
+justify-content: center;
+color: white;
+background: var(--blue);
+font-size: 18px;
+font-weight: 800;
+}
+.top-actions {
+display: flex;
+gap: 8px;
+}
+.icon-button {
+width: 40px;
+height: 40px;
+border: 0;
+border-radius: 50%;
+background: white;
+color: #222;
+display: flex;
+align-items: center;
 
-    :root {
-      --blue: #447bff;
-      --blue-dark: #3467e8;
-      --bg: #f2f3f5;
-      --card: #ffffff;
-      --text: #111111;
-      --secondary: #818c99;
-      --line: #e5e7eb;
-    }
-
-    html,
-    body {
-      margin: 0;
-      padding: 0;
-      min-height: 100%;
-      background: var(--bg);
-      color: var(--text);
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "SF Pro Display",
-        "SF Pro Text",
-        Arial,
-        sans-serif;
-    }
-
-    body {
-      min-height: 100vh;
-      padding-top: env(safe-area-inset-top);
-      padding-bottom: env(safe-area-inset-bottom);
-    }
-
-    button {
-      font: inherit;
-    }
-
-    .app {
-      width: 100%;
-      max-width: 560px;
-      margin: 0 auto;
-      min-height: 100vh;
-      padding-bottom: 92px;
-    }
-
-    /* HEADER */
-
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      padding: 0 16px;
-
-      background: rgba(242, 243, 245, 0.92);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      font-size: 21px;
-      font-weight: 750;
-      letter-spacing: -0.5px;
-    }
-
-    .logo-mark {
-      width: 32px;
-      height: 32px;
-      border-radius: 10px;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      color: white;
-      background: var(--blue);
-
-      font-size: 18px;
-      font-weight: 800;
-    }
-
-    .top-actions {
-      display: flex;
-      gap: 8px;
-    }
-
-    .icon-button {
-      width: 40px;
-      height: 40px;
-      border: 0;
-      border-radius: 50%;
-      background: white;
-      color: #222;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      font-size: 20px;
-    }
-
-    /* LOGIN */
-
-    .login-screen {
-      padding: 34px 18px 20px;
-    }
-
-    .welcome {
-      background: var(--card);
-      border-radius: 22px;
-      padding: 30px 22px;
-      text-align: center;
-      box-shadow: 0 4px 20px rgba(0,0,0,.05);
-    }
-
-    .welcome-logo {
-      width: 76px;
-      height: 76px;
-      border-radius: 24px;
-      margin: 0 auto 18px;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      background: var(--blue);
-      color: white;
-
-      font-size: 38px;
-      font-weight: 800;
-    }
-
-    .welcome h1 {
-      margin: 0 0 8px;
-      font-size: 27px;
-      letter-spacing: -0.6px;
-    }
-
-    .welcome p {
-      margin: 0 0 24px;
-      color: var(--secondary);
-      line-height: 1.45;
-    }
-
-    .login-button {
-      position: relative;
+justify-content: center;
+font-size: 20px;
+}
+/* LOGIN */
+.login-screen {
+padding: 34px 18px 20px;
+}
+.welcome {
+background: var(--card);
+border-radius: 22px;
+padding: 30px 22px;
+text-align: center;
+box-shadow: 0 4px 20px rgba(0,0,0,.05);
+}
+.welcome-logo {
+width: 76px;
+height: 76px;
+border-radius: 24px;
+margin: 0 auto 18px;
+display: flex;
+align-items: center;
+justify-content: center;
+background: var(--blue);
+color: white;
+font-size: 38px;
+font-weight: 800;
+}
+.welcome h1 {
+margin: 0 0 8px;
+font-size: 27px;
+letter-spacing: -0.6px;
+}
+.welcome p {
+margin: 0 0 24px;
+color: var(--secondary);
+line-height: 1.45;
+}
+.login-button {
+position: relative;
 z-index: 1000;
 pointer-events: auto;
-      width: 100%;
-      min-height: 52px;
-      border: 0;
-      border-radius: 14px;
-
-      background: var(--blue);
-      color: white;
-
-      font-size: 17px;
-      font-weight: 650;
-    }
-
-    .login-button:active {
-      transform: scale(.98);
-      background: var(--blue-dark);
-    }
-
-    .status {
-      margin-top: 14px;
-      color: var(--secondary);
-      font-size: 14px;
-      min-height: 20px;
-    }
-
-    /* MAIN */
-
-    .content {
-      padding: 0 14px;
-    }
-
-    .profile-card {
-      background: var(--card);
-      border-radius: 20px;
-      padding: 16px;
-      margin-bottom: 14px;
-
-      display: flex;
-      align-items: center;
-      gap: 14px;
-
-      box-shadow: 0 3px 15px rgba(0,0,0,.04);
-    }
-
-    .avatar {
-      width: 58px;
-      height: 58px;
-      border-radius: 50%;
-      object-fit: cover;
-      background: #dce5ff;
-      flex-shrink: 0;
-    }
-
-    .profile-info {
-      min-width: 0;
-    }
-
-    .profile-name {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .profile-id {
-      color: var(--secondary);
-      font-size: 14px;
-    }
-
-    .section-title {
-      font-size: 22px;
-      font-weight: 750;
-      margin: 22px 4px 12px;
-      letter-spacing: -0.4px;
-    }
-
-    /* SEARCH */
-
-    .search {
-      height: 46px;
-      border-radius: 14px;
-      background: white;
-
-      display: flex;
-      align-items: center;
-      gap: 9px;
-
-      padding: 0 14px;
-      color: var(--secondary);
-
-      margin-bottom: 16px;
-    }
-
-    .search span {
-      font-size: 15px;
-    }
-
-    /* STORIES */
-
-    .stories {
-      display: flex;
-      gap: 12px;
-      overflow-x: auto;
-      padding: 2px 2px 8px;
-
-      scrollbar-width: none;
-    }
-
-    .stories::-webkit-scrollbar {
-      display: none;
-    }
-
-    .story {
-      min-width: 74px;
-      text-align: center;
-    }
-
-    .story-avatar {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      margin: 0 auto 6px;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      background: linear-gradient(135deg, #6b8cff, #9db4ff);
-      color: white;
-
-      font-size: 24px;
-      font-weight: 700;
-
-      border: 3px solid white;
-      box-shadow: 0 2px 8px rgba(0,0,0,.1);
-    }
-
-    .story-name {
-      font-size: 12px;
-      color: #555;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* POSTS */
-
-    .post {
-      background: white;
-      border-radius: 20px;
-      margin-bottom: 14px;
-      overflow: hidden;
-
-      box-shadow: 0 3px 15px rgba(0,0,0,.04);
-    }
-
-    .post-head {
-      display: flex;
-      align-items: center;
-      padding: 15px 15px 10px;
-      gap: 10px;
-    }
-
-    .post-avatar {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      background: #dce5ff;
-      color: var(--blue);
-
-      font-weight: 750;
-    }
-
-    .post-author {
-      font-weight: 650;
-      font-size: 15px;
-    }
-
-    .post-time {
-      margin-top: 2px;
-      color: var(--secondary);
-      font-size: 12px;
-    }
-
-    .post-body {
-      padding: 4px 15px 15px;
-      line-height: 1.45;
-      font-size: 15px;
-    }
-
-    .post-actions {
-      border-top: 1px solid var(--line);
-
-      display: flex;
-      justify-content: space-around;
-
-      padding: 4px 0;
-    }
-
-    .post-action {
-      flex: 1;
-      border: 0;
-      background: transparent;
-
-      padding: 10px 4px;
-      color: var(--secondary);
-
-      font-size: 14px;
-    }
-
-    .post-action:active {
-      background: #f3f5f8;
-    }
-
-    /* BOTTOM NAV */
-
-    .bottom-nav {
-      position: fixed;
-      z-index: 30;
-
-      left: 50%;
-      bottom: calc(10px + env(safe-area-inset-bottom));
-
-      transform: translateX(-50%);
-
-      width: min(540px, calc(100% - 20px));
-      height: 68px;
-
-      border-radius: 22px;
-
-      background: rgba(255,255,255,.94);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-
-      box-shadow: 0 5px 30px rgba(0,0,0,.15);
-
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-
-      padding: 5px;
-    }
-
-    .nav-item {
-      border: 0;
-      background: transparent;
-      border-radius: 17px;
-
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-
-      gap: 2px;
-
-      color: #777;
-      font-size: 11px;
-      font-weight: 600;
-    }
-
-    .nav-item .nav-icon {
-      font-size: 22px;
-      line-height: 24px;
-    }
-
-    .nav-item.active {
-      background: #e8efff;
-      color: var(--blue);
-    }
-
-    /* PAGES */
-
-    .page {
-      display: none;
-    }
-
-    .page.active {
-      display: block;
-    }
-
-    .empty-card {
-      background: white;
-      border-radius: 20px;
-      padding: 34px 20px;
-      text-align: center;
-      color: var(--secondary);
-    }
-
-    .empty-icon {
-      font-size: 42px;
-      margin-bottom: 10px;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #0e1014;
-        --card: #181b21;
-        --text: #f2f3f5;
-        --secondary: #9aa2ad;
-        --line: #2a2e36;
-      }
-
-      .topbar {
-        background: rgba(14,16,20,.9);
-      }
-
-      .icon-button,
-      .search,
-      .post,
-      .profile-card,
-      .empty-card {
-        background: var(--card);
-      }
-
-      .bottom-nav {
-        background: rgba(24,27,33,.94);
-      }
-
-      .story-name {
-        color: #aaa;
-      }
-    }
-  </style>
+width: 100%;
+min-height: 52px;
+border: 0;
+border-radius: 14px;
+background: var(--blue);
+color: white;
+font-size: 17px;
+font-weight: 650;
+}
+
+.login-button:active {
+transform: scale(.98);
+background: var(--blue-dark);
+}
+.status {
+margin-top: 14px;
+color: var(--secondary);
+font-size: 14px;
+min-height: 20px;
+}
+/* MAIN */
+.content {
+padding: 0 14px;
+}
+.profile-card {
+background: var(--card);
+border-radius: 20px;
+padding: 16px;
+margin-bottom: 14px;
+display: flex;
+align-items: center;
+gap: 14px;
+box-shadow: 0 3px 15px rgba(0,0,0,.04);
+}
+.avatar {
+width: 58px;
+height: 58px;
+border-radius: 50%;
+object-fit: cover;
+background: #dce5ff;
+flex-shrink: 0;
+}
+.profile-info {
+min-width: 0;
+}
+.profile-name {
+font-size: 18px;
+font-weight: 700;
+margin-bottom: 4px;
+}
+.profile-id {
+color: var(--secondary);
+font-size: 14px;
+}
+.section-title {
+font-size: 22px;
+font-weight: 750;
+margin: 22px 4px 12px;
+letter-spacing: -0.4px;
+}
+/* SEARCH */
+
+.search {
+height: 46px;
+border-radius: 14px;
+background: white;
+display: flex;
+align-items: center;
+gap: 9px;
+padding: 0 14px;
+color: var(--secondary);
+margin-bottom: 16px;
+}
+.search span {
+font-size: 15px;
+}
+/* STORIES */
+.stories {
+display: flex;
+gap: 12px;
+overflow-x: auto;
+padding: 2px 2px 8px;
+scrollbar-width: none;
+}
+.stories::-webkit-scrollbar {
+display: none;
+}
+.story {
+min-width: 74px;
+text-align: center;
+}
+.story-avatar {
+width: 64px;
+height: 64px;
+border-radius: 50%;
+margin: 0 auto 6px;
+display: flex;
+align-items: center;
+justify-content: center;
+background: linear-gradient(135deg, #6b8cff, #9db4ff);
+color: white;
+font-size: 24px;
+font-weight: 700;
+border: 3px solid white;
+box-shadow: 0 2px 8px rgba(0,0,0,.1);
+}
+.story-name {
+font-size: 12px;
+color: #555;
+white-space: nowrap;
+overflow: hidden;
+
+text-overflow: ellipsis;
+}
+/* POSTS */
+.post {
+background: white;
+border-radius: 20px;
+margin-bottom: 14px;
+overflow: hidden;
+box-shadow: 0 3px 15px rgba(0,0,0,.04);
+}
+.post-head {
+display: flex;
+align-items: center;
+padding: 15px 15px 10px;
+gap: 10px;
+}
+.post-avatar {
+width: 42px;
+height: 42px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+background: #dce5ff;
+color: var(--blue);
+font-weight: 750;
+}
+.post-author {
+font-weight: 650;
+font-size: 15px;
+}
+.post-time {
+margin-top: 2px;
+color: var(--secondary);
+font-size: 12px;
+}
+.post-body {
+padding: 4px 15px 15px;
+line-height: 1.45;
+font-size: 15px;
+}
+.post-actions {
+border-top: 1px solid var(--line);
+display: flex;
+justify-content: space-around;
+padding: 4px 0;
+}
+.post-action {
+flex: 1;
+
+border: 0;
+background: transparent;
+padding: 10px 4px;
+color: var(--secondary);
+font-size: 14px;
+}
+.post-action:active {
+background: #f3f5f8;
+}
+/* BOTTOM NAV */
+.bottom-nav {
+position: fixed;
+z-index: 30;
+left: 50%;
+bottom: calc(10px + env(safe-area-inset-bottom));
+transform: translateX(-50%);
+width: min(540px, calc(100% - 20px));
+height: 68px;
+border-radius: 22px;
+background: rgba(255,255,255,.94);
+backdrop-filter: blur(18px);
+-webkit-backdrop-filter: blur(18px);
+box-shadow: 0 5px 30px rgba(0,0,0,.15);
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+padding: 5px;
+}
+.nav-item {
+border: 0;
+background: transparent;
+border-radius: 17px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+gap: 2px;
+color: #777;
+font-size: 11px;
+font-weight: 600;
+}
+.nav-item .nav-icon {
+font-size: 22px;
+line-height: 24px;
+}
+.nav-item.active {
+
+background: #e8efff;
+color: var(--blue);
+}
+/* PAGES */
+.page {
+display: none;
+}
+.page.active {
+display: block;
+}
+.empty-card {
+background: white;
+border-radius: 20px;
+padding: 34px 20px;
+text-align: center;
+color: var(--secondary);
+}
+.empty-icon {
+font-size: 42px;
+margin-bottom: 10px;
+}
+@media (prefers-color-scheme: dark) {
+:root {
+--bg: #0e1014;
+--card: #181b21;
+--text: #f2f3f5;
+--secondary: #9aa2ad;
+--line: #2a2e36;
+}
+.topbar {
+background: rgba(14,16,20,.9);
+}
+.icon-button,
+.search,
+.post,
+.profile-card,
+.empty-card {
+background: var(--card);
+}
+.bottom-nav {
+background: rgba(24,27,33,.94);
+}
+.story-name {
+color: #aaa;
+}
+}
+</style>
 </head>
-
 <body>
+<!-- LOGIN -->
+<section id="loginScreen" class="login-screen">
+<div class="welcome">
 
-  <!-- LOGIN -->
-  <section id="loginScreen" class="login-screen">
-    <div class="welcome">
-
-      <div class="welcome-logo">VK</div>
-
-      <h1>VK Mini Client</h1>
-
-      <p>
-        VK внутри Telegram.<br>
-        Авторизуйтесь через VK ID, чтобы продолжить.
-      </p>
-      <button id="loginButton" class="login-button" onclick="event.stopImmediatePropagation(); document.getElementById('status').textContent=JSON.stringify(window.VKIDSDK.Config.get());"
+<div class="welcome-logo">VK</div>
+<h1>VK Mini Client</h1>
+<p>
+VK внутри Telegram.<br>
+Авторизуйтесь через VK ID, чтобы продолжить.
+</p>
+<button id="loginButton" class="login-button">
   Войти через VK ID
 </button>
-
-      <div id="status" class="status"></div>
-
-    </div>
-  </section>
-
-
-  <!-- APPLICATION -->
-  <main id="app" class="app" style="display:none;">
-
-    <header class="topbar">
-
-      <div class="logo">
-        <div class="logo-mark">VK</div>
-        <span>VK</span>
-      </div>
-
-      <div class="top-actions">
-        <button class="icon-button" onclick="showSearch()">⌕</button>
-        <button class="icon-button" onclick="showProfile()">☻</button>
-      </div>
-
-    </header>
-
-
-    <div class="content">
-
-      <!-- HOME -->
-      <section id="homePage" class="page active">
-
-        <div class="profile-card">
-
-          <img
-            id="avatar"
-            class="avatar"
-            src=""
-            alt=""
-          >
-
-          <div class="profile-info">
-            <div id="name" class="profile-name">
-              Пользователь VK
-            </div>
-
-            <div id="userId" class="profile-id"></div>
-          </div>
-
-        </div>
-
-
-        <div class="search" onclick="showSearch()">
-          <span>🔍</span>
-          <span>Поиск</span>
-        </div>
-
-
-        <div class="section-title">
-          Истории
-        </div>
-
-        <div class="stories">
-
-          <div class="story">
-            <div class="story-avatar">+</div>
-            <div class="story-name">Ваша история</div>
-          </div>
-
-          <div class="story">
-            <div class="story-avatar">A</div>
-            <div class="story-name">Алекс</div>
-          </div>
-
-          <div class="story">
-            <div class="story-avatar">M</div>
-            <div class="story-name">Мария</div>
-          </div>
-
-          <div class="story">
-            <div class="story-avatar">D</div>
-            <div class="story-name">Дмитрий</div>
-          </div>
-
-          <div class="story">
-            <div class="story-avatar">K</div>
-            <div class="story-name">Катя</div>
-          </div>
-
-        </div>
-
-
-        <div class="section-title">
-          Новости
-        </div>
-
-
-        <article class="post">
-
-          <div class="post-head">
-
-            <div class="post-avatar">VK</div>
-
-            <div>
-              <div class="post-author">
-                VK Mini Client
-              </div>
-
-              <div class="post-time">
-                только что
-              </div>
-            </div>
-
-          </div>
-
-          <div class="post-body">
-            Добро пожаловать в новый VK Mini Client! 👋
-            Здесь постепенно появятся друзья, сообщения,
-            новости и другие возможности VK.
-          </div>
-
-          <div class="post-actions">
-
-            <button class="post-action">
-              ♡ Нравится
-            </button>
-
-            <button class="post-action">
-              💬 Комментировать
-            </button>
-
-            <button class="post-action">
-              ↗ Поделиться
-            </button>
-
-          </div>
-
-        </article>
-
-
-        <article class="post">
-
-          <div class="post-head">
-
-            <div class="post-avatar">🚀</div>
-
-            <div>
-              <div class="post-author">
-                Технологии
-              </div>
-
-              <div class="post-time">
-                сегодня
-              </div>
-            </div>
-
-          </div>
-
-          <div class="post-body">
-            Интерфейс работает прямо внутри Telegram
-            как Mini App. 🚀
-          </div>
-
-          <div class="post-actions">
-
-            <button class="post-action">
-              ♡ Нравится
-            </button>
-
-            <button class="post-action">
-              💬 Комментарии
-            </button>
-
-            <button class="post-action">
-              ↗ Поделиться
-            </button>
-
-          </div>
-
-        </article>
-
-      </section>
-
-
-      <!-- FRIENDS -->
-      <section id="friendsPage" class="page">
-
-        <div class="section-title">
-          Друзья
-        </div>
-
-     <div id="friendsList" class="friends-list"></div>
-
-      </section>
-
-
-      <!-- MESSAGES -->
-      <section id="messagesPage" class="page">
-
-        <div class="section-title">
-          Сообщения
-        </div>
-
-        <div class="empty-card">
-          <div class="empty-icon">💬</div>
-          <div>Сообщения подключим следующим этапом.</div>
-        </div>
-
-      </section>
-
-
-      <!-- PROFILE -->
-      <section id="profilePage" class="page">
-
-        <div class="section-title">
-          Профиль
-        </div>
-
-        <div class="profile-card">
-
-          <img
-            id="profileAvatar"
-            class="avatar"
-            src=""
-            alt=""
-          >
-
-          <div class="profile-info">
-
-            <div
-              id="profileName"
-              class="profile-name"
-            >
-              Пользователь VK
-            </div>
-
-            <div
-              id="profileId"
-              class="profile-id"
-            ></div>
-
-          </div>
-
-        </div>
-
-      </section>
-
-    </div>
-
-
-    <!-- NAVIGATION -->
-    <nav class="bottom-nav">
-
-      <button
-        class="nav-item active"
-        data-page="homePage"
-        onclick="switchPage('homePage', this)"
-      >
-        <span class="nav-icon">⌂</span>
-        <span>Главная</span>
-      </button>
-
-      <button
-        class="nav-item"
-        data-page="friendsPage"
-        onclick="switchPage('friendsPage', this)"
-      >
-        <span class="nav-icon">♧</span>
-        <span>Друзья</span>
-      </button>
-
-      <button
-        class="nav-item"
-        data-page="messagesPage"
-        onclick="switchPage('messagesPage', this)"
-      >
-        <span class="nav-icon">◉</span>
-        <span>Сообщения</span>
-      </button>
-
-      <button
-        class="nav-item"
-        data-page="profilePage"
-        onclick="switchPage('profilePage', this)"
-      >
-        <span class="nav-icon">●</span>
-        <span>Профиль</span>
-      </button>
-
-    </nav>
-
-  </main>
-
-
-  <script>
-    /* =========================
-       TELEGRAM
-    ========================= */
-
-    const tg = window.Telegram?.WebApp;
-
-    if (tg) {
-      tg.ready();
-      tg.expand();
-    }
-
-
-    /* =========================
-       VK ID
-    ========================= */
-
-    const APP_ID = "54798745";
-
-    const REDIRECT_URL =
-      "https://vk-mini-client.vercel.app/api/auth/vk/callback";
-
-
-    const status = document.getElementById("status");
-
-
-    function randomString(length = 32) {
-
-      const chars =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
-
-      let result = "";
-
-      const values =
-        new Uint8Array(length);
-
-      crypto.getRandomValues(values);
-
-      for (let i = 0; i < length; i++) {
-        result += chars[values[i] % chars.length];
-      }
-
-      return result;
-    }
-
-
-    const state =
-      sessionStorage.getItem("vk_state") ||
-      randomString(32);
-
-    sessionStorage.setItem(
-      "vk_state",
-      state
-    );
-
-
-    const codeVerifier =
-      sessionStorage.getItem("vk_code_verifier") ||
-      randomString(64);
-
-    sessionStorage.setItem(
-      "vk_code_verifier",
-      codeVerifier
-    );
-
-try {
-  window.VKIDSDK.Config.init({
-    app: 54798745,
-    redirectUrl: REDIRECT_URL,
-    state: state,
-    codeVerifier: codeVerifier,
-    scope: "email phone friends",
-    mode: window.VKIDSDK.ConfigAuthMode.Redirect
-  });
-
-  document.getElementById("status").textContent =
-    "INIT OK: " +
-    JSON.stringify(window.VKIDSDK.Config.get());
-
-} catch (error) {
-  document.getElementById("status").textContent =
-    "INIT ERROR: " +
-    (error?.message || String(error));
+<div id="status" class="status"></div>
+</div>
+</section>
+<!-- APPLICATION -->
+<main id="app" class="app" style="display:none;">
+<header class="topbar">
+<div class="logo">
+<div class="logo-mark">VK</div>
+<span>VK</span>
+</div>
+<div class="top-actions">
+<button class="icon-button" onclick="showSearch()">⌕</button>
+<button class="icon-button" onclick="showProfile()">☻</button>
+</div>
+</header>
+<div class="content">
+<!-- HOME -->
+<section id="homePage" class="page active">
+<div class="profile-card">
+<img
+id="avatar"
+class="avatar"
+src=""
+alt=""
+>
+<div class="profile-info">
+<div id="name" class="profile-name">
+Пользователь VK
+</div>
+<div id="userId" class="profile-id"></div>
+</div>
+</div>
+
+<div class="search" onclick="showSearch()">
+<span> </span>
+<span>Поиск</span>
+</div>
+<div class="section-title">
+Истории
+</div>
+<div class="stories">
+<div class="story">
+<div class="story-avatar">+</div>
+<div class="story-name">Ваша история</div>
+</div>
+<div class="story">
+<div class="story-avatar">A</div>
+<div class="story-name">Алекс</div>
+</div>
+<div class="story">
+<div class="story-avatar">M</div>
+<div class="story-name">Мария</div>
+</div>
+<div class="story">
+<div class="story-avatar">D</div>
+<div class="story-name">Дмитрий</div>
+</div>
+<div class="story">
+<div class="story-avatar">K</div>
+<div class="story-name">Катя</div>
+</div>
+</div>
+<div class="section-title">
+Новости
+</div>
+<article class="post">
+<div class="post-head">
+<div class="post-avatar">VK</div>
+<div>
+<div class="post-author">
+VK Mini Client
+</div>
+<div class="post-time">
+только что
+</div>
+</div>
+
+</div>
+<div class="post-body">
+Добро пожаловать в новый VK Mini Client!
+Здесь постепенно появятся друзья, сообщения,
+новости и другие возможности VK.
+</div>
+<div class="post-actions">
+<button class="post-action">
+♡ Нравится
+</button>
+<button class="post-action">
+Комментировать
+</button>
+<button class="post-action">
+↗ Поделиться
+</button>
+</div>
+</article>
+<article class="post">
+<div class="post-head">
+<div class="post-avatar"> </div>
+<div>
+<div class="post-author">
+Технологии
+</div>
+<div class="post-time">
+сегодня
+</div>
+</div>
+</div>
+<div class="post-body">
+Интерфейс работает прямо внутри Telegram
+как Mini App.
+</div>
+<div class="post-actions">
+<button class="post-action">
+♡ Нравится
+</button>
+<button class="post-action">
+Комментарии
+
+</button>
+<button class="post-action">
+↗ Поделиться
+</button>
+</div>
+</article>
+</section>
+<!-- FRIENDS -->
+<section id="friendsPage" class="page">
+<div class="section-title">
+Друзья
+</div>
+<div id="friendsList" class="friends-list"></div>
+</section>
+<!-- MESSAGES -->
+<section id="messagesPage" class="page">
+<div class="section-title">
+Сообщения
+</div>
+<div class="empty-card">
+<div class="empty-icon"> </div>
+<div>Сообщения подключим следующим этапом.</div>
+</div>
+</section>
+<!-- PROFILE -->
+<section id="profilePage" class="page">
+<div class="section-title">
+Профиль
+</div>
+<div class="profile-card">
+<img
+id="profileAvatar"
+class="avatar"
+src=""
+alt=""
+>
+<div class="profile-info">
+<div
+id="profileName"
+class="profile-name"
+>
+
+Пользователь VK
+</div>
+<div
+id="profileId"
+class="profile-id"
+></div>
+</div>
+</div>
+</section>
+</div>
+<!-- NAVIGATION -->
+<nav class="bottom-nav">
+<button
+class="nav-item active"
+data-page="homePage"
+onclick="switchPage('homePage', this)"
+>
+<span class="nav-icon">⌂</span>
+<span>Главная</span>
+</button>
+<button
+class="nav-item"
+data-page="friendsPage"
+onclick="switchPage('friendsPage', this)"
+>
+<span class="nav-icon">♧</span>
+<span>Друзья</span>
+</button>
+<button
+class="nav-item"
+data-page="messagesPage"
+onclick="switchPage('messagesPage', this)"
+>
+<span class="nav-icon">◉</span>
+<span>Сообщения</span>
+</button>
+<button
+class="nav-item"
+data-page="profilePage"
+onclick="switchPage('profilePage', this)"
+>
+<span class="nav-icon">●</span>
+<span>Профиль</span>
+</button>
+</nav>
+</main>
+<script>
+
+/* =========================
+TELEGRAM
+========================= */
+const tg = window.Telegram?.WebApp;
+if (tg) {
+tg.ready();
+tg.expand();
 }
-    /* =========================
-       LOGIN
-    ========================= */
-
-    document
-  .getElementById("loginButton")
-  .addEventListener("click", async () => {
-    try {
-      status.textContent = "Открываем VK ID…";
-
-      await window.VKIDSDK.Auth.login();
-    } catch (error) {
-      status.textContent =
-        "Ошибка: " +
-        (error?.message || "не удалось открыть VK ID");
-    }
-  });
-
-
-    /* =========================
-       CALLBACK
-    ========================= */
-
-    async function handleCallback() {
-
-      const params =
-        new URLSearchParams(
-          window.location.search
-        );
-
-      const code =
-        params.get("code");
-
-      const deviceId =
-        params.get("device_id");
-
-      if (!code || !deviceId) {
-        return;
-      }
-
-
-      try {
-
-        status.textContent =
-          "Авторизация через VK ID…";
-
-
-        const response =
-          await fetch(
-            "/api/auth/exchange",
-            {
-              method: "POST",
-
-              headers: {
-                "Content-Type":
-                  "application/json"
-              },
-
-              body:
-                JSON.stringify({
-
-                  code:
-                    code,
-
-                  device_id:
-                    deviceId,
-
-                  code_verifier:
-                    sessionStorage.getItem(
-                      "vk_code_verifier"
-                    ),
-
-                  state:
-                    params.get("state") || ""
-
-                })
-
-            }
-          );
-
-
-        const token =
-          await response.json();
-
-
-        if (!response.ok) {
-
-          throw new Error(
-            token.error ||
-            "Ошибка обмена кода"
-          );
-
-        }
-
-
-        status.textContent =
-          "Получаем профиль…";
-
-
-        const user =
-          await window.VKIDSDK.Auth.userInfo(
-            token.access_token
-          );
-
-
-        localStorage.setItem(
-          "vk_user",
-          JSON.stringify(user)
-        );
-
-
-        sessionStorage.setItem(
-          "vk_access_token",
-          token.access_token
-        );
-
-
-        showUser(user);
-
-
-        window.history.replaceState(
-          {},
-          document.title,
-          "/"
-        );
-
-
-      } catch (error) {
-
-        status.textContent =
-          "Ошибка авторизации: " +
-          (
-            error?.message ||
-            JSON.stringify(error)
-          );
-
-      }
-
-    }
-
-
-    /* =========================
-       SHOW USER
-    ========================= */
-
-    function showUser(user) {
-
-      const profile =
-        user?.user || user;
-
-
-      const firstName =
-        profile?.first_name || "";
-
-      const lastName =
-        profile?.last_name || "";
-
-
-      const fullName =
-        [firstName, lastName]
-          .filter(Boolean)
-          .join(" ") ||
-        "Пользователь VK";
-
-
-      const id =
-        profile?.user_id || "";
-
-
-      const avatar =
-        profile?.avatar || "";
-
-const friendsResponse = await fetch(
-  "https://api.vk.ru/method/friends.get?" +
-  new URLSearchParams({
-    access_token: token.access_token,
-    v: "5.199",
-    fields: "photo_200,first_name,last_name"
-  })
+/* =========================
+VK ID
+========================= */
+const APP_ID = "54798745";
+const REDIRECT_URL =
+"https://vk-mini-client.vercel.app/api/auth/vk/callback";
+const status = document.getElementById("status");
+function randomString(length = 32) {
+const chars =
+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
+let result = "";
+const values =
+new Uint8Array(length);
+crypto.getRandomValues(values);
+for (let i = 0; i < length; i++) {
+result += chars[values[i] % chars.length];
+}
+return result;
+}
+const state =
+sessionStorage.getItem("vk_state") ||
+randomString(32);
+sessionStorage.setItem(
+"vk_state",
+state
+);
+const codeVerifier =
+sessionStorage.getItem("vk_code_verifier") ||
+randomString(64);
+sessionStorage.setItem(
+"vk_code_verifier",
+codeVerifier
 );
 
-const friendsData = await friendsResponse.json();
 
-const friendsList =
-  document.getElementById("friendsList");
-
-if (friendsData.response?.items) {
-  friendsList.innerHTML =
-    friendsData.response.items
-      .map(friend => `
-        <div class="friend-card">
-          <img src="${friend.photo_200 || ""}" class="friend-avatar">
-          <div class="friend-info">
-            <div class="friend-name">
-              ${friend.first_name || ""} ${friend.last_name || ""}
-            </div>
-          </div>
-        </div>
-      `)
-      .join("");
-} else {
-  friendsList.textContent =
-    "Не удалось загрузить друзей";
+try {
+if (!window.VKIDSDK?.Config) {
+throw new Error("VK ID SDK не загрузился");
 }
-      document.getElementById(
-        "name"
-      ).textContent =
-        fullName;
+
+window.VKIDSDK.Config.init({
+app: Number(APP_ID),
+redirectUrl: REDIRECT_URL,
+state,
+codeVerifier,
+scope: "email phone friends",
+mode: window.VKIDSDK.ConfigAuthMode.Redirect
+});
+
+} catch (error) {
+status.textContent =
+"Ошибка инициализации VK ID: " +
+(error?.message || String(error));
+}
+
+/* =========================
+LOGIN
+========================= */
+document
+.getElementById("loginButton")
+.addEventListener("click", async () => {
+try {
+status.textContent = "Открываем VK ID…";
+await window.VKIDSDK.Auth.login();
+} catch (error) {
+status.textContent =
+"Ошибка: " +
+(error?.message || "не удалось открыть VK ID");
+}
+});
+/* =========================
+CALLBACK
+========================= */
+async function handleCallback() {
+const params =
+new URLSearchParams(
+window.location.search
+);
+const code =
+params.get("code");
+const deviceId =
+params.get("device_id");
+if (!code || !deviceId) {
+return;
+}
+try {
+status.textContent =
+"Авторизация через VK ID…";
+
+const response =
+await fetch(
+"/api/auth/exchange",
+{
+method: "POST",
+headers: {
+"Content-Type":
+"application/json"
+},
+body:
+JSON.stringify({
+code:
+code,
+device_id:
+deviceId,
+code_verifier:
+sessionStorage.getItem(
+"vk_code_verifier"
+),
+state:
+params.get("state") || ""
+})
+}
+);
+const token =
+await response.json();
+if (!response.ok) {
+throw new Error(
+token.error ||
+"Ошибка обмена кода"
+);
+}
+status.textContent =
+"Получаем профиль…";
+const user =
+await window.VKIDSDK.Auth.userInfo(
+token.access_token
+);
+localStorage.setItem(
+"vk_user",
+JSON.stringify(user)
+);
+
+sessionStorage.setItem(
+"vk_access_token",
+token.access_token
+);
+showUser(user);
+loadFriends(token.access_token);
+window.history.replaceState(
+{},
+document.title,
+"/"
+);
+} catch (error) {
+status.textContent =
+"Ошибка авторизации: " +
+(
+error?.message ||
+JSON.stringify(error)
+);
+}
+}
+async function loadFriends(accessToken) {
+const friendsList =
+document.getElementById("friendsList");
+
+if (!friendsList) {
+return;
+}
+
+if (!accessToken) {
+friendsList.textContent =
+"Войдите через VK ID, чтобы увидеть друзей";
+return;
+}
+
+friendsList.textContent =
+"Загрузка друзей…";
+
+try {
+const response =
+await fetch(
+"https://api.vk.ru/method/friends.get?" +
+new URLSearchParams({
+access_token: accessToken,
+v: "5.199",
+fields: "photo_200,first_name,last_name"
+})
+);
+
+const data =
+await response.json();
+
+if (!data.response?.items) {
+friendsList.textContent =
+data.error?.error_msg ||
+"Не удалось загрузить друзей";
+return;
+}
+
+friendsList.innerHTML =
+data.response.items
+.map(friend => `
+<div class="friend-card">
+<img
+src="${friend.photo_200 || ""}"
+class="friend-avatar"
+alt=""
+>
+<div class="friend-info">
+<div class="friend-name">
+${friend.first_name || ""} ${friend.last_name || ""}
+</div>
+</div>
+</div>
+`)
+.join("");
+
+} catch (error) {
+friendsList.textContent =
+"Ошибка загрузки друзей: " +
+(error?.message || "неизвестная ошибка");
+}
+}
 
 
-      document.getElementById(
-        "userId"
-      ).textContent =
-        id
-          ? "VK ID: " + id
-          : "";
+/* =========================
+SHOW USER
+========================= */
 
+function showUser(user) {
+const profile =
+user?.user || user;
+const firstName =
+profile?.first_name || "";
+const lastName =
+profile?.last_name || "";
+const fullName =
+[firstName, lastName]
+.filter(Boolean)
+.join(" ") ||
+"Пользователь VK";
+const id =
+profile?.user_id || "";
+const avatar =
+profile?.avatar || "";
 
-      if (avatar) {
+document.getElementById(
+"name"
+).textContent =
+fullName;
+document.getElementById(
+"userId"
+).textContent =
+id
+? "VK ID: " + id
+: "";
+if (avatar) {
+document.getElementById(
+"avatar"
+).src = avatar;
+document.getElementById(
+"profileAvatar"
+).src = avatar;
+}
+document.getElementById(
+"profileName"
+).textContent =
+fullName;
 
-        document.getElementById(
-          "avatar"
-        ).src = avatar;
+document.getElementById(
+"profileId"
+).textContent =
+id
+? "VK ID: " + id
+: "";
+document.getElementById(
+"loginScreen"
+).style.display =
+"none";
+document.getElementById(
+"app"
+).style.display =
+"block";
+}
+/* =========================
+RESTORE SESSION
+========================= */
+const savedUser =
+localStorage.getItem(
+"vk_user"
+);
+if (savedUser) {
+try {
+showUser(
+JSON.parse(savedUser)
+);
+loadFriends(
+sessionStorage.getItem("vk_access_token")
+);
+} catch {
+localStorage.removeItem(
+"vk_user"
+);
+}
+}
+handleCallback();
+/* =========================
+NAVIGATION
+========================= */
+function switchPage(
+pageId,
+button
+) {
+document
 
-        document.getElementById(
-          "profileAvatar"
-        ).src = avatar;
+.querySelectorAll(".page")
+.forEach(page => {
+page.classList.remove(
+"active"
+);
+});
+document.getElementById(
+pageId
+).classList.add(
+"active"
+);
+document
+.querySelectorAll(".nav-item")
+.forEach(item => {
+item.classList.remove(
+"active"
+);
+});
+button.classList.add(
+"active"
+);
+window.scrollTo({
+top: 0,
+behavior: "smooth"
+});
+}
+/* =========================
+SEARCH
+========================= */
+function showSearch() {
+alert(
+"Поиск VK подключим следующим этапом "
+);
+}
+/* =========================
+PROFILE
+========================= */
+function showProfile() {
+const button =
+document.querySelector(
+'[data-page="profilePage"]'
+);
 
-      }
-
-
-      document.getElementById(
-        "profileName"
-      ).textContent =
-        fullName;
-
-
-      document.getElementById(
-        "profileId"
-      ).textContent =
-        id
-          ? "VK ID: " + id
-          : "";
-
-
-      document.getElementById(
-        "loginScreen"
-      ).style.display =
-        "none";
-
-
-      document.getElementById(
-        "app"
-      ).style.display =
-        "block";
-
-    }
-
-
-    /* =========================
-       RESTORE SESSION
-    ========================= */
-
-    const savedUser =
-      localStorage.getItem(
-        "vk_user"
-      );
-
-
-    if (savedUser) {
-
-      try {
-
-        showUser(
-          JSON.parse(savedUser)
-        );
-
-      } catch {
-
-        localStorage.removeItem(
-          "vk_user"
-        );
-
-      }
-
-    }
-
-
-    handleCallback();
-
-
-    /* =========================
-       NAVIGATION
-    ========================= */
-
-    function switchPage(
-      pageId,
-      button
-    ) {
-
-      document
-        .querySelectorAll(".page")
-        .forEach(page => {
-
-          page.classList.remove(
-            "active"
-          );
-
-        });
-
-
-      document.getElementById(
-        pageId
-      ).classList.add(
-        "active"
-      );
-
-
-      document
-        .querySelectorAll(".nav-item")
-        .forEach(item => {
-
-          item.classList.remove(
-            "active"
-          );
-
-        });
-
-
-      button.classList.add(
-        "active"
-      );
-
-
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
-
-    }
-
-
-    /* =========================
-       SEARCH
-    ========================= */
-
-    function showSearch() {
-
-      alert(
-        "Поиск VK подключим следующим этапом 🔎"
-      );
-
-    }
-
-
-    /* =========================
-       PROFILE
-    ========================= */
-
-    function showProfile() {
-
-      const button =
-        document.querySelector(
-          '[data-page="profilePage"]'
-        );
-
-      switchPage(
-        "profilePage",
-        button
-      );
-
-    }
-
-  </script>
-
+switchPage(
+"profilePage",
+button
+);
+}
+</script>
 </body>
 </html>
