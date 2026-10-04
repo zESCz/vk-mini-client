@@ -877,26 +877,9 @@ pointer-events: auto;
       codeVerifier
     );
 
-window.VKIDSDK = window.VKIDSDK;
-    window.VKIDSDK.Config.init({
-
-      app: 54798745,
-
-      redirectUrl:
-        REDIRECT_URL,
-
-      state:
-        state,
-
-      codeVerifier:
-        codeVerifier,
-
-      scope: "email phone friends",
-
-      mode:
-        window.VKIDSDK.ConfigAuthMode.Redirect
-
-    });
+window.VKIDSDK.Config.init({
+  app: 54798745
+});
     /* =========================
        LOGIN
     ========================= */
