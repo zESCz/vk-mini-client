@@ -920,7 +920,7 @@ showUser(
 JSON.parse(savedUser)
 );
 loadFriends(
-sessionStorage.getItem("vk_access_token")
+localStorage.getItem("vk_access_token")
 );
 } catch {
 localStorage.removeItem(
