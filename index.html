@@ -878,7 +878,12 @@ pointer-events: auto;
     );
 
 window.VKIDSDK.Config.init({
-  app: 54798745
+  app: 54798745,
+  redirectUrl: REDIRECT_URL,
+  state: state,
+  codeVerifier: codeVerifier,
+  scope: "email phone friends",
+  mode: window.VKIDSDK.ConfigAuthMode.Redirect
 });
     /* =========================
        LOGIN
