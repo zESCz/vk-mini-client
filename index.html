@@ -3,13 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
-<title>VK Mini Client</title>
+<title>VK Mini Client — V3</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://unpkg.com/@vkid/sdk@2.6.1/dist-sdk/umd/index.js"></script>
 <style>
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;background:#0e1014;color:#f3f4f6;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Arial,sans-serif}button,input{font:inherit}button{border:0}.hidden{display:none!important}.app{max-width:640px;margin:auto;min-height:100vh;padding-bottom:100px}.top{position:sticky;top:0;z-index:10;height:62px;padding:0 15px;display:flex;align-items:center;justify-content:space-between;background:rgba(14,16,20,.92);backdrop-filter:blur(18px)}.brand{display:flex;align-items:center;gap:9px;font-size:21px;font-weight:800}.vkmark{width:34px;height:34px;border-radius:11px;background:#447bff;color:#fff;display:grid;place-items:center;font-weight:900}.content{padding:0 14px}.page{display:none}.page.active{display:block}.login{min-height:100vh;padding:30px 16px;display:grid;place-items:center;background:#0e1014}.login-card{width:min(430px,100%);background:#181b21;border-radius:26px;padding:30px 22px;text-align:center}.login-logo{width:76px;height:76px;border-radius:24px;background:#447bff;display:grid;place-items:center;margin:0 auto 18px;font-size:35px;font-weight:900}.login h1{margin:0 0 8px}.login p{color:#9aa2ad;line-height:1.45}.login-btn,.primary{background:#447bff;color:#fff;border-radius:14px;padding:13px 16px;font-weight:750}.login-btn{width:100%;margin-top:12px;font-size:16px}.status{min-height:20px;margin-top:12px;color:#9aa2ad;font-size:13px}.profile-card,.card,.post,.friend,.dialog,.track,.searchbox{background:#181b21;border-radius:20px}.profile-card{display:flex;align-items:center;gap:14px;padding:16px;margin:16px 0}.avatar{width:60px;height:60px;border-radius:50%;object-fit:cover;background:#dce5ff}.name{font-size:20px;font-weight:800}.muted{color:#9aa2ad}.searchbox{display:flex;gap:8px;padding:8px;margin:14px 0}.searchbox input{min-width:0;flex:1;background:#22262e;color:#fff;border:0;border-radius:13px;padding:12px;outline:0}.title{font-size:27px;font-weight:850;margin:24px 4px 13px}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.secondary{background:#252a33;color:#fff;border-radius:12px;padding:10px 13px;font-weight:650}.stories{display:flex;gap:13px;overflow:auto;padding:2px 2px 8px}.story{min-width:72px;text-align:center}.story-avatar{width:64px;height:64px;border-radius:50%;border:3px solid #fff;background:linear-gradient(135deg,#6588ff,#a1b6ff);display:grid;place-items:center;font-size:23px;font-weight:800}.story-name{font-size:12px;color:#aeb4bd;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.list{display:grid;gap:10px}.friend,.dialog,.track{display:flex;align-items:center;gap:12px;padding:13px}.small-avatar,.cover{width:52px;height:52px;border-radius:50%;object-fit:cover;background:#dce5ff;flex:none}.cover{border-radius:13px}.post{overflow:hidden;margin-bottom:12px}.posthead{display:flex;gap:10px;padding:14px}.postava{width:42px;height:42px;border-radius:50%;background:#dce5ff;color:#447bff;display:grid;place-items:center;font-weight:800}.postbody{padding:0 14px 14px;line-height:1.48;white-space:pre-wrap}.postimg{width:100%;max-height:460px;object-fit:cover}.actions{display:flex;border-top:1px solid #292e36}.actions button{flex:1;background:transparent;color:#9aa2ad;padding:11px 3px;font-size:13px}.empty,.loading{padding:24px;text-align:center;color:#9aa2ad;background:#181b21;border-radius:20px}.player{position:fixed;z-index:25;bottom:88px;left:50%;transform:translateX(-50%);width:min(600px,calc(100% - 24px));background:#20242c;border-radius:18px;padding:10px 12px;display:flex;align-items:center;gap:10px;box-shadow:0 10px 35px #0008}.player button{background:transparent;color:#fff;font-size:21px}.player-main{flex:1;min-width:0}.track-title{font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.track-sub{font-size:12px;color:#9aa2ad;margin-top:3px}.nav{position:fixed;z-index:30;bottom:calc(10px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(620px,calc(100% - 18px));height:70px;border-radius:23px;background:rgba(24,27,33,.96);display:grid;grid-template-columns:repeat(5,1fr);padding:5px;box-shadow:0 8px 35px #0007;backdrop-filter:blur(18px)}.nav button{background:transparent;color:#777;border-radius:17px;font-size:10px;font-weight:700}.nav button.active{background:#e7efff;color:#447bff}.navicon{display:block;font-size:22px;line-height:25px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;background:#0e1014;color:#f3f4f6;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Arial,sans-serif}button,input{font:inherit}button{border:0}.hidden{display:none!important}.state-card{text-align:center;padding:28px 18px}.state-icon{width:52px;height:52px;border-radius:16px;background:#447bff;color:#fff;display:grid;place-items:center;font-weight:900;margin:0 auto 14px}.state-card .primary{margin-top:16px;padding:11px 18px;border-radius:12px;background:#447bff;color:#fff;font-weight:700}.app{max-width:640px;margin:auto;min-height:100vh;padding-bottom:100px}.top{position:sticky;top:0;z-index:10;height:62px;padding:0 15px;display:flex;align-items:center;justify-content:space-between;background:rgba(14,16,20,.92);backdrop-filter:blur(18px)}.brand{display:flex;align-items:center;gap:9px;font-size:21px;font-weight:800}.vkmark{width:34px;height:34px;border-radius:11px;background:#447bff;color:#fff;display:grid;place-items:center;font-weight:900}.content{padding:0 14px}.page{display:none}.page.active{display:block}.login{min-height:100vh;padding:30px 16px;display:grid;place-items:center;background:#0e1014}.login-card{width:min(430px,100%);background:#181b21;border-radius:26px;padding:30px 22px;text-align:center}.login-logo{width:76px;height:76px;border-radius:24px;background:#447bff;display:grid;place-items:center;margin:0 auto 18px;font-size:35px;font-weight:900}.login h1{margin:0 0 8px}.login p{color:#9aa2ad;line-height:1.45}.login-btn,.primary{background:#447bff;color:#fff;border-radius:14px;padding:13px 16px;font-weight:750}.login-btn{width:100%;margin-top:12px;font-size:16px}.status{min-height:20px;margin-top:12px;color:#9aa2ad;font-size:13px}.profile-card,.card,.post,.friend,.dialog,.track,.searchbox{background:#181b21;border-radius:20px}.profile-card{display:flex;align-items:center;gap:14px;padding:16px;margin:16px 0}.avatar{width:60px;height:60px;border-radius:50%;object-fit:cover;background:#dce5ff}.name{font-size:20px;font-weight:800}.muted{color:#9aa2ad}.searchbox{display:flex;gap:8px;padding:8px;margin:14px 0}.searchbox input{min-width:0;flex:1;background:#22262e;color:#fff;border:0;border-radius:13px;padding:12px;outline:0}.title{font-size:27px;font-weight:850;margin:24px 4px 13px}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.secondary{background:#252a33;color:#fff;border-radius:12px;padding:10px 13px;font-weight:650}.stories{display:flex;gap:13px;overflow:auto;padding:2px 2px 8px}.story{min-width:72px;text-align:center}.story-avatar{width:64px;height:64px;border-radius:50%;border:3px solid #fff;background:linear-gradient(135deg,#6588ff,#a1b6ff);display:grid;place-items:center;font-size:23px;font-weight:800}.story-name{font-size:12px;color:#aeb4bd;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.list{display:grid;gap:10px}.friend,.dialog,.track{display:flex;align-items:center;gap:12px;padding:13px}.small-avatar,.cover{width:52px;height:52px;border-radius:50%;object-fit:cover;background:#dce5ff;flex:none}.cover{border-radius:13px}.post{overflow:hidden;margin-bottom:12px}.posthead{display:flex;gap:10px;padding:14px}.postava{width:42px;height:42px;border-radius:50%;background:#dce5ff;color:#447bff;display:grid;place-items:center;font-weight:800}.postbody{padding:0 14px 14px;line-height:1.48;white-space:pre-wrap}.postimg{width:100%;max-height:460px;object-fit:cover}.actions{display:flex;border-top:1px solid #292e36}.actions button{flex:1;background:transparent;color:#9aa2ad;padding:11px 3px;font-size:13px}.empty,.loading{padding:24px;text-align:center;color:#9aa2ad;background:#181b21;border-radius:20px}.player{position:fixed;z-index:25;bottom:88px;left:50%;transform:translateX(-50%);width:min(600px,calc(100% - 24px));background:#20242c;border-radius:18px;padding:10px 12px;display:flex;align-items:center;gap:10px;box-shadow:0 10px 35px #0008}.player button{background:transparent;color:#fff;font-size:21px}.player-main{flex:1;min-width:0}.track-title{font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.track-sub{font-size:12px;color:#9aa2ad;margin-top:3px}.nav{position:fixed;z-index:30;bottom:calc(10px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(620px,calc(100% - 18px));height:70px;border-radius:23px;background:rgba(24,27,33,.96);display:grid;grid-template-columns:repeat(5,1fr);padding:5px;box-shadow:0 8px 35px #0007;backdrop-filter:blur(18px)}.nav button{background:transparent;color:#777;border-radius:17px;font-size:10px;font-weight:700}.nav button.active{background:#e7efff;color:#447bff}.navicon{display:block;font-size:22px;line-height:25px}
 </style>
-</head>
+<style>
+.nav{overflow-x:auto;justify-content:flex-start;padding-left:8px;padding-right:8px;gap:4px}
+.nav button{min-width:88px;flex:0 0 88px;padding-left:6px;padding-right:6px}
+.clips-intro{margin-bottom:12px}
+.clips-list{display:flex;flex-direction:column;gap:14px}
+.clip-card{background:#191c22;border-radius:20px;overflow:hidden}
+.clip-thumb{width:100%;aspect-ratio:9/13;object-fit:cover;background:#0b0d10;display:block}
+.clip-body{padding:13px 15px}
+.clip-title{font-size:17px;font-weight:700;line-height:1.25}
+.clip-meta{margin-top:5px;color:#9da4b0;font-size:14px}
+.clip-actions{display:flex;gap:8px;margin-top:10px}
+.clip-actions a,.clip-actions button{flex:1;text-align:center}
+</style></head>
 <body>
 <section id="login" class="login"><div class="login-card"><div class="login-logo">VK</div><h1>VK Mini Client</h1><p>VK внутри Telegram Mini App.<br>Войдите через VK ID.</p><button id="loginBtn" class="login-btn">Войти через VK ID</button><div id="status" class="status"></div></div></section>
 <main id="app" class="app hidden">
@@ -19,31 +31,98 @@
 <section id="friends" class="page"><div class="title">Друзья</div><div id="friendsList" class="list"></div></section>
 <section id="messages" class="page"><div class="title">Сообщения</div><div id="messagesList" class="list"></div></section>
 <section id="music" class="page"><div class="title">Музыка</div><div class="card" style="padding:15px;margin-bottom:12px"><div class="row"><div><b>Моя музыка</b><div class="muted">Треки VK</div></div><button class="primary" onclick="loadMusic()">Загрузить</button></div></div><div id="musicList" class="list"></div></section>
-<section id="profile" class="page"><div class="title">Профиль</div><div class="profile-card"><img id="profileAvatar" class="avatar"><div><div id="profileName" class="name"></div><div id="profileId" class="muted"></div></div></div><div class="card" style="padding:15px"><div class="row"><b>Аккаунт</b><button class="secondary" onclick="logout()">Выйти</button></div></div></section>
+<section id="clips" class="page">
+  <div class="row"><div class="title">Клипы</div><button class="secondary" onclick="loadClips()">Обновить</button></div>
+  <div class="card clips-intro"><b>VK Клипы</b><div class="muted">Короткие ролики и видео</div></div>
+  <div id="clipsList" class="clips-list"></div>
+</section><section id="profile" class="page"><div class="title">Профиль</div><div class="profile-card"><img id="profileAvatar" class="avatar"><div><div id="profileName" class="name"></div><div class="muted" style="margin-top:10px">VK Mini Client • V3</div><div id="profileId" class="muted"></div></div></div><div class="card" style="padding:15px"><div class="row"><b>Аккаунт</b><button class="secondary" onclick="logout()">Выйти</button></div></div></section>
 </div>
 <div id="player" class="player hidden"><button id="play" onclick="togglePlay()">▶</button><div class="player-main"><div id="ptitle" class="track-title"></div><div id="partist" class="track-sub"></div></div><button onclick="closePlayer()">×</button><audio id="audio"></audio></div>
-<nav class="nav"><button class="active" onclick="go('home',this)"><span class="navicon">⌂</span>Главная</button><button onclick="go('friends',this)"><span class="navicon">♧</span>Друзья</button><button onclick="go('messages',this)"><span class="navicon">◉</span>Сообщения</button><button onclick="go('music',this)"><span class="navicon">♫</span>Музыка</button><button onclick="go('profile',this)"><span class="navicon">●</span>Профиль</button></nav>
+<nav class="nav"><button class="active" onclick="go('home',this)"><span class="navicon">⌂</span>Главная</button><button onclick="go('friends',this)"><span class="navicon">♧</span>Друзья</button><button onclick="go('messages',this)"><span class="navicon">◉</span>Сообщения</button><button onclick="go('clips',this)"><span class="navicon">▶</span>Клипы</button><button onclick="go('music',this)"><span class="navicon">♫</span>Музыка</button><button onclick="go('profile',this)"><span class="navicon">●</span>Профиль</button></nav>
 </main>
 <script>
-const APP_ID="54798745",REDIRECT_URL="https://vk-mini-client.vercel.app/api/auth/vk/callback",VK_API="https://api.vk.ru/method",$=id=>document.getElementById(id),status=$('status');
+const APP_ID="54798745",REDIRECT_URL="https://vk-mini-client.vercel.app/api/auth/vk/callback",$=id=>document.getElementById(id),status=$('status');
 if(window.Telegram?.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand()}
 function rnd(n){const c="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~",v=new Uint8Array(n);crypto.getRandomValues(v);return [...v].map(x=>c[x%c.length]).join('')}
 let state=sessionStorage.getItem('vk_state')||rnd(32),verifier=sessionStorage.getItem('vk_code_verifier')||rnd(64);sessionStorage.setItem('vk_state',state);sessionStorage.setItem('vk_code_verifier',verifier);
-try{VKIDSDK.Config.init({app:Number(APP_ID),redirectUrl:REDIRECT_URL,state,codeVerifier:verifier,scope:"email phone friends",mode:VKIDSDK.ConfigAuthMode.Redirect})}catch(e){status.textContent='Ошибка VK ID: '+e.message}
+try{VKIDSDK.Config.init({app:Number(APP_ID),redirectUrl:REDIRECT_URL,state,codeVerifier:verifier,scope:"email phone friends wall video audio",mode:VKIDSDK.ConfigAuthMode.Redirect})}catch(e){status.textContent='Ошибка VK ID: '+e.message}
 $('loginBtn').onclick=async()=>{try{status.textContent='Открываем VK ID…';await VKIDSDK.Auth.login()}catch(e){status.textContent='Ошибка: '+(e.message||e)}};
 function access(){return localStorage.getItem('vk_access_token')||''}
-async function api(method,params={}){const r=await fetch(VK_API+'/'+method+'?'+new URLSearchParams({...params,access_token:access(),v:'5.199'}));const d=await r.json();if(d.error)throw Error(d.error.error_msg||'Ошибка VK API');return d.response}
+async function api(method,params={}){
+  const token=access();
+  if(!token) throw Error('Требуется вход через VK ID');
+  let r;
+  try{
+    r=await fetch('/api/vk',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({method,params,access_token:token}),
+      cache:'no-store'
+    });
+  }catch(e){
+    throw Error('Сервер VK временно недоступен');
+  }
+  let d={};
+  try{d=await r.json()}catch{}
+  if(!r.ok || d.error){
+    const msg=d?.error?.error_msg || d?.error || 'VK API недоступен';
+    throw Error(String(msg));
+  }
+  return d.response;
+}
 function esc(x){return String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function showUser(raw){const u=raw?.user||raw||{},name=[u.first_name,u.last_name].filter(Boolean).join(' ')||'Пользователь VK',id=u.user_id||u.id||'',av=u.avatar||u.photo_200||'';$('homeName').textContent=name;$('homeId').textContent=id?'VK ID: '+id:'';$('profileName').textContent=name;$('profileId').textContent=id?'VK ID: '+id:'';if(av){$('homeAvatar').src=av;$('profileAvatar').src=av}$('login').classList.add('hidden');$('app').classList.remove('hidden')}
-async function callback(){const p=new URLSearchParams(location.search),code=p.get('code'),device=p.get('device_id');if(!code||!device)return;try{status.textContent='Получаем профиль…';const r=await fetch('/api/auth/exchange',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code,device_id:device,code_verifier:sessionStorage.getItem('vk_code_verifier'),state:p.get('state')||''})});const t=await r.json();if(!r.ok||!t.access_token)throw Error(t.error||'Не удалось получить токен');const u=await VKIDSDK.Auth.userInfo(t.access_token);localStorage.setItem('vk_user',JSON.stringify(u));localStorage.setItem('vk_access_token',t.access_token);sessionStorage.setItem('vk_access_token',t.access_token);history.replaceState({},document.title,'/');showUser(u);status.textContent='';loadFeed();loadFriends();loadMessages()}catch(e){status.textContent='Ошибка авторизации: '+(e.message||e)}}
+async function callback(){const p=new URLSearchParams(location.search),code=p.get('code'),device=p.get('device_id');if(!code||!device)return;try{status.textContent='Получаем профиль…';const r=await fetch('/api/auth/exchange',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code,device_id:device,code_verifier:sessionStorage.getItem('vk_code_verifier'),state:p.get('state')||''})});const t=await r.json();if(!r.ok||!t.access_token)throw Error(t.error||'Не удалось получить токен');const u=await VKIDSDK.Auth.userInfo(t.access_token);localStorage.setItem('vk_user',JSON.stringify(u));localStorage.setItem('vk_access_token',t.access_token);sessionStorage.setItem('vk_access_token',t.access_token);history.replaceState({},document.title,'/');showUser(u);status.textContent='';loadFeed();loadFriends();loadMessages();loadClips()}catch(e){status.textContent='Ошибка авторизации: '+(e.message||e)}}
 function restore(){const u=localStorage.getItem('vk_user'),t=access();if(u&&t){try{showUser(JSON.parse(u));loadFeed();loadFriends();loadMessages()}catch(e){logout()}}else{$('login').classList.remove('hidden');$('app').classList.add('hidden')}}
+function stateBox(title,text,buttonText='Повторить',action='location.reload()'){
+  return `<div class="card state-card"><div class="state-icon">VK</div><b>${esc(title)}</b><div class="muted">${esc(text)}</div><button class="primary" onclick="${action}">${esc(buttonText)}</button></div>`;
+}
 async function loadFriends(){const b=$('friendsList');if(!access()){b.innerHTML='<div class="empty">Войдите через VK ID, чтобы увидеть друзей.</div>';return}b.innerHTML='<div class="loading">Загрузка друзей…</div>';try{const r=await api('friends.get',{count:100,fields:'photo_200,first_name,last_name,online'}),a=r?.items||[];b.innerHTML=a.length?a.map(f=>`<div class="friend"><img class="small-avatar" src="${esc(f.photo_200||'')}"/><div><b>${esc((f.first_name||'')+' '+(f.last_name||''))}</b><div class="muted">${f.online?'онлайн':'не в сети'}</div></div></div>`).join(''):'<div class="empty">Друзья не найдены.</div>'}catch(e){b.innerHTML='<div class="empty">Не удалось загрузить друзей: '+esc(e.message)+'</div>'}}
 async function loadFeed(){const b=$('feed');if(!access()){b.innerHTML='<div class="empty">Войдите через VK ID, чтобы открыть ленту.</div>';return}b.innerHTML='<div class="loading">Загружаем ленту…</div>';try{const r=await api('newsfeed.get',{filters:'post',count:20}),a=r?.items||[];b.innerHTML=a.length?a.map(renderPost).join(''):'<div class="empty">Лента пуста.</div>'}catch(e){b.innerHTML='<div class="empty">Лента недоступна: '+esc(e.message)+'</div>'}}
 function renderPost(p){const text=p.text||'',photo=p.attachments?.find(x=>x.type==='photo')?.photo?.sizes?.slice(-1)[0]?.url||'',date=p.date?new Date(p.date*1000).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';return `<article class="post"><div class="posthead"><div class="postava">VK</div><div><b>VK</b><div class="muted">${date}</div></div></div>${text?`<div class="postbody">${esc(text)}</div>`:''}${photo?`<img class="postimg" src="${esc(photo)}">`:''}<div class="actions"><button>♡ ${p.likes?.count||0}</button><button>Комментарии ${p.comments?.count||0}</button><button>↗ ${p.reposts?.count||0}</button></div></article>`}
 async function loadMessages(){const b=$('messagesList');if(!access()){b.innerHTML='<div class="empty">Войдите через VK ID, чтобы открыть сообщения.</div>';return}b.innerHTML='<div class="loading">Загрузка сообщений…</div>';try{const r=await api('messages.getConversations',{count:30,extended:1,fields:'photo_100,first_name,last_name'}),items=r?.items||[],profiles=r?.profiles||[];b.innerHTML=items.length?items.map(x=>{const id=x.conversation?.peer?.id,pr=profiles.find(p=>p.id===id)||{},name=[pr.first_name,pr.last_name].filter(Boolean).join(' ')||'Диалог',txt=x.last_message?.text||'Без текста';return `<div class="dialog"><img class="small-avatar" src="${esc(pr.photo_100||'')}"><div><b>${esc(name)}</b><div class="muted">${esc(txt.slice(0,100))}</div></div></div>`}).join(''):'<div class="empty">Диалогов нет.</div>'}catch(e){b.innerHTML='<div class="empty">Сообщения недоступны: '+esc(e.message)+'</div>'}}
+async function loadClips(){
+  const b=$('clipsList');
+  if(!access()){b.innerHTML='<div class="empty">Войдите через VK ID, чтобы открыть клипы.</div>';return}
+  b.innerHTML='<div class="loading">Загружаем клипы и видео…</div>';
+  try{
+    let items=[];
+    try{
+      const cat=await api('video.getCatalog',{count:16,extended:1});
+      const sections=cat?.items||cat?.sections||[];
+      for(const s of sections){
+        if(Array.isArray(s?.items)) items.push(...s.items);
+      }
+    }catch(_){}
+    if(!items.length){
+      const r=await api('video.search',{q:'клипы',count:20,extended:1,sort:2});
+      items=r?.items||[];
+    }
+    items=items.filter(x=>x&&x.type!=='album').slice(0,20);
+    if(!items.length){b.innerHTML='<div class="empty">VK не вернул доступные ролики. Попробуйте обновить.</div>';return}
+    b.innerHTML=items.map(x=>{
+      const oid=x.owner_id||0,id=x.id||0,title=x.title||'Видео VK';
+      const thumb=x.photo_800||x.photo_640||x.photo_320||x.photo_130||'';
+      const link=x.url||`https://vk.com/video${oid}_${id}`;
+      return `<article class="clip-card">
+        ${thumb?`<img class="clip-thumb" loading="lazy" src="${esc(thumb)}" alt="">`:`<div class="clip-thumb"></div>`}
+        <div class="clip-body">
+          <div class="clip-title">${esc(title)}</div>
+          <div class="clip-meta">${x.views?esc(String(x.views))+' просмотров':''}${x.duration?' · '+Math.round(x.duration/60)+' мин':''}</div>
+          <div class="clip-actions">
+            <a class="secondary" href="${esc(link)}" target="_blank" rel="noopener">Смотреть в VK</a>
+          </div>
+        </div>
+      </article>`;
+    }).join('');
+  }catch(e){
+    b.innerHTML='<div class="empty">Клипы недоступны: '+esc(e.message)+'</div>';
+  }
+}
+
 async function loadMusic(){const b=$('musicList');if(!access()){b.innerHTML='<div class="empty">Войдите через VK ID, чтобы открыть музыку.</div>';return}b.innerHTML='<div class="loading">Загрузка музыки…</div>';try{const r=await api('audio.get',{count:50}),a=r?.items||[];b.innerHTML=a.length?a.map(x=>`<div class="track"><div class="cover">♫</div><div style="flex:1;min-width:0"><div class="track-title">${esc(x.title||'Трек')}</div><div class="track-sub">${esc(x.artist||'VK')}</div></div><button class="primary" onclick='playTrack(${JSON.stringify(x.url||'')},${JSON.stringify(x.title||'Трек')},${JSON.stringify(x.artist||'')})'>▶</button></div>`).join(''):'<div class="empty">VK не вернул список музыки. Для некоторых приложений audio API ограничен.</div>'}catch(e){b.innerHTML='<div class="empty">Музыка недоступна для этого токена: '+esc(e.message)+'</div>'}}
 function playTrack(url,title,artist){if(!url){alert('У VK нет URL этого трека для воспроизведения.');return}const a=$('audio');a.src=url;$('ptitle').textContent=title;$('partist').textContent=artist;$('player').classList.remove('hidden');a.play().then(()=>$('play').textContent='❚❚').catch(()=>{})}function togglePlay(){const a=$('audio');if(a.paused){a.play();$('play').textContent='❚❚'}else{a.pause();$('play').textContent='▶'}}function closePlayer(){const a=$('audio');a.pause();a.src='';$('player').classList.add('hidden')}
-function go(id,btn){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));btn.classList.add('active');if(id==='friends')loadFriends();if(id==='messages')loadMessages();if(id==='music')loadMusic();scrollTo(0,0)}
+function go(id,btn){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));btn.classList.add('active');if(id==='friends')loadFriends();if(id==='messages')loadMessages();if(id==='clips')loadClips();if(id==='music')loadMusic();scrollTo(0,0)}
 function openSearch(){const b=$('searchBox');if(b.innerHTML){b.innerHTML='';return}b.innerHTML='<div class="searchbox"><input id="q" placeholder="Найти людей VK"><button class="primary" onclick="searchPeople()">Найти</button></div><div id="searchResults"></div>';$('q').focus()}
 async function searchPeople(){const q=$('q')?.value.trim(),b=$('searchResults');if(!q)return;b.innerHTML='<div class="loading">Поиск…</div>';try{const r=await api('users.search',{q,count:20,fields:'photo_100,first_name,last_name,online'}),a=r?.items||[];b.innerHTML=a.length?'<div class="list">'+a.map(u=>`<div class="friend"><img class="small-avatar" src="${esc(u.photo_100||'')}"><div><b>${esc((u.first_name||'')+' '+(u.last_name||''))}</b><div class="muted">ID ${u.id} · ${u.online?'онлайн':'не в сети'}</div></div></div>`).join('')+'</div>':'<div class="empty">Ничего не найдено.</div>'}catch(e){b.innerHTML='<div class="empty">Ошибка поиска: '+esc(e.message)+'</div>'}}
 function logout(){localStorage.removeItem('vk_user');localStorage.removeItem('vk_access_token');sessionStorage.removeItem('vk_access_token');$('app').classList.add('hidden');$('login').classList.remove('hidden');status.textContent='Вы вышли из аккаунта.';scrollTo(0,0)}
