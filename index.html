@@ -73,7 +73,7 @@ async function loginVK(){
     location.assign('https://id.vk.ru/authorize?'+q.toString());
   }catch(e){status.textContent='Ошибка входа: '+(e.message||e)}}
 function access(){return localStorage.getItem('vk_access_token')||''}
-function clearSession(){localStorage.removeItem('vk_user');localStorage.removeItem('vk_access_token');sessionStorage.removeItem('vk_access_token')}
+function clearSession(){localStorage.removeItem('vk_user');localStorage.removeItem('vk_access_token');sessionStorage.removeItem('vk_access_token');sessionStorage.removeItem('vk_state');sessionStorage.removeItem('vk_code_verifier')}
 let jsonpSeq=0;
 function api(method,params={}){
   const token=access();
