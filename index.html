@@ -49,7 +49,29 @@ function rnd(n){const c="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012
 let state=sessionStorage.getItem('vk_state')||rnd(32),verifier=sessionStorage.getItem('vk_code_verifier')||rnd(64);sessionStorage.setItem('vk_state',state);sessionStorage.setItem('vk_code_verifier',verifier);
 try{VKIDSDK.Config.init({app:Number(APP_ID),redirectUrl:REDIRECT_URL,state,codeVerifier:verifier,scope:"email phone friends video audio messages wall",mode:VKIDSDK.ConfigAuthMode.Redirect})}catch(e){status.textContent='Ошибка VK ID: '+e.message}
 $('loginBtn').onclick=loginVK;
-async function loginVK(){try{status.textContent='Открываем VK ID…';await VKIDSDK.Auth.login()}catch(e){status.textContent='Ошибка входа: '+(e.message||e)}}
+async function loginVK(){
+  try{
+    status.textContent='Открываем VK ID…';
+    // Не используем VKIDSDK.Auth.login(): в Telegram/iOS WebView его
+    // аналитический запрос может вернуть Load failed ещё до редиректа.
+    // Формируем OAuth 2.1 URL напрямую, сохраняя тот же PKCE verifier.
+    const verifier=sessionStorage.getItem('vk_code_verifier')||rnd(96);
+    const st=sessionStorage.getItem('vk_state')||rnd(32);
+    sessionStorage.setItem('vk_code_verifier',verifier);
+    sessionStorage.setItem('vk_state',st);
+    const hash=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(verifier));
+    const challenge=btoa(String.fromCharCode(...new Uint8Array(hash))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+    const q=new URLSearchParams({
+      client_id:APP_ID,
+      response_type:'code',
+      redirect_uri:REDIRECT_URL,
+      scope:'email phone friends video audio messages wall',
+      state:st,
+      code_challenge:challenge,
+      code_challenge_method:'s256'
+    });
+    location.assign('https://id.vk.ru/authorize?'+q.toString());
+  }catch(e){status.textContent='Ошибка входа: '+(e.message||e)}}
 function access(){return localStorage.getItem('vk_access_token')||''}
 function clearSession(){localStorage.removeItem('vk_user');localStorage.removeItem('vk_access_token');sessionStorage.removeItem('vk_access_token')}
 let jsonpSeq=0;
@@ -81,7 +103,9 @@ function showUser(raw){const u=raw?.user||raw||{},name=[u.first_name,u.last_name
 async function exchangeAndEnter(code,device){
   // ВАЖНО: обмен code -> access_token выполняется в браузере через VK ID SDK.
   // Так токен и последующие API-вызовы идут с одного клиентского IP.
-  const t=await VKIDSDK.Auth.exchangeCode(code,device);
+  const verifier=sessionStorage.getItem('vk_code_verifier')||'';
+  if(!verifier)throw Error('Не найден PKCE code_verifier');
+  const t=await VKIDSDK.Auth.exchangeCode(code,device,verifier);
   if(!t?.access_token)throw Error('VK ID не вернул access_token');
   // Не вызываем VKIDSDK.Auth.userInfo(): на iOS/TG WebView этот отдельный
   // запрос может завершаться сетевым Load failed. Профиль берём обычным VK API
@@ -99,8 +123,10 @@ async function exchangeAndEnter(code,device){
   loadFeed();loadFriends();loadMessages();loadClips();
 }
 async function callback(){
-  const p=new URLSearchParams(location.search),code=p.get('code'),device=p.get('device_id');
+  const p=new URLSearchParams(location.search),code=p.get('code'),device=p.get('device_id'),returnedState=p.get('state');
   if(!code||!device)return;
+  const expectedState=sessionStorage.getItem('vk_state')||'';
+  if(expectedState && returnedState && expectedState!==returnedState){status.textContent='Ошибка авторизации: state не совпадает';return;}
   try{status.textContent='Получаем токен VK ID…';await exchangeAndEnter(code,device)}
   catch(e){clearSession();$('app').classList.add('hidden');$('login').classList.remove('hidden');status.textContent='Ошибка авторизации: '+(e.message||e)}
 }
