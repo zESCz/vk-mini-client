@@ -1,30 +1,17 @@
 export default function handler(req, res) {
-  const params = new URLSearchParams();
+  const query = new URLSearchParams();
+  const source = req.query || {};
 
-  const allowed = [
-    "code",
-    "device_id",
-    "state",
-    "type",
-    "expires_in",
-    "error",
-    "error_description"
-  ];
-
-  for (const key of allowed) {
-    const value = req.query?.[key];
-
-    if (value !== undefined && value !== null) {
-      params.set(key, String(value));
+  for (const [key, value] of Object.entries(source)) {
+    if (Array.isArray(value)) {
+      for (const item of value) query.append(key, String(item));
+    } else if (value !== undefined && value !== null) {
+      query.set(key, String(value));
     }
   }
 
-  const target =
-    "https://vk-mini-client.vercel.app/?" + params.toString();
-
-  res.writeHead(302, {
-    Location: target
-  });
-
+  const target = query.toString() ? `/?${query.toString()}` : "/";
+  res.setHeader("Cache-Control", "no-store");
+  res.writeHead(302, { Location: target });
   res.end();
 }
