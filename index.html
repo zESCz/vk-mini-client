@@ -83,10 +83,16 @@ async function exchangeAndEnter(code,device){
   // Так токен и последующие API-вызовы идут с одного клиентского IP.
   const t=await VKIDSDK.Auth.exchangeCode(code,device);
   if(!t?.access_token)throw Error('VK ID не вернул access_token');
-  const u=await VKIDSDK.Auth.userInfo(t.access_token);
-  localStorage.setItem('vk_user',JSON.stringify(u));
+  // Не вызываем VKIDSDK.Auth.userInfo(): на iOS/TG WebView этот отдельный
+  // запрос может завершаться сетевым Load failed. Профиль берём обычным VK API
+  // JSONP-запросом с того же устройства, где получен токен.
   localStorage.setItem('vk_access_token',t.access_token);
   sessionStorage.setItem('vk_access_token',t.access_token);
+  const r=await api('users.get',{fields:'photo_200,first_name,last_name'});
+  const user=r?.[0];
+  if(!user)throw Error('VK не вернул профиль пользователя');
+  const u={user,user_id:user.id,first_name:user.first_name,last_name:user.last_name,avatar:user.photo_200};
+  localStorage.setItem('vk_user',JSON.stringify(u));
   history.replaceState({},document.title,'/');
   showUser(u);
   status.textContent='';
