@@ -7,7 +7,8 @@ const ALLOWED = new Set([
   "video.search",
   "video.getCatalog",
   "video.getCatalogSection",
-  "users.get"
+  "users.get",
+  "users.search"
 ]);
 
 export default async function handler(req, res) {
@@ -55,11 +56,14 @@ export default async function handler(req, res) {
     params.set("v", "5.199");
 
     const vk = await fetch(
-      `https://api.vk.ru/method/${encodeURIComponent(method)}?${params.toString()}`,
+      `https://api.vk.ru/method/${encodeURIComponent(method)}`,
       {
+        method: "POST",
         headers: {
-          Accept: "application/json"
-        }
+          Accept: "application/json",
+          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+        },
+        body: params.toString()
       }
     );
 
