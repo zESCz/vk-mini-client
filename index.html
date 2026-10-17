@@ -45,16 +45,36 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Roboto",Arial,sans-serif}
 .clip-card{min-height:70vh;border-radius:14px}
 @media(min-width:681px){.app{box-shadow:0 0 0 1px rgba(0,0,0,.04)}.nav{left:50%;right:auto;transform:translateX(-50%);width:min(680px,100%);border-radius:0}}
 
-/* Khaki app background requested for Prometheus */
-:root{--vk-bg:#c8c3a0;--vk-card:#fffdf7;--vk-text:#292a22;--vk-muted:#777967;--vk-line:#d9d4b8}
+/* Khaki background with graphite surfaces requested for Prometheus */
+:root{--vk-bg:#c8c3a0;--vk-card:#3b3d3f;--vk-text:#f2f2ee;--vk-muted:#c0c2bd;--vk-line:#56595b}
 html,body{background:var(--vk-bg);color:var(--vk-text)}
 .app{background:var(--vk-bg)}
-.top{background:rgba(255,253,247,.96);border-bottom-color:var(--vk-line)}
-.searchbox input{background:#efeddf;color:#292a22}
-.secondary,.iconbtn{background:#efeddf;color:#4f5543}
-.nav{background:rgba(255,253,247,.97);border-top-color:var(--vk-line)}
-.player{background:#fffdf7;color:#292a22;border-color:var(--vk-line)}
-.player button{color:#292a22}
+.top{background:rgba(59,61,63,.97);color:#f2f2ee;border-bottom-color:var(--vk-line)}
+.brand{color:#78aaff}
+.card,.profile-card,.post,.friend,.dialog,.track,.searchbox,.empty,.loading,.clip-card{background:var(--vk-card);color:#f2f2ee;border-color:var(--vk-line);box-shadow:none}
+.postbody{color:#f2f2ee}
+.muted,.status,.story-name,.track-sub,.clip-meta{color:var(--vk-muted)}
+.story-avatar{border-color:var(--vk-card)}
+.searchbox input{background:#292b2d;color:#f2f2ee}
+.secondary,.iconbtn{background:#292b2d;color:#f2f2ee}
+.nav{background:rgba(59,61,63,.98);border-top-color:var(--vk-line)}
+.nav button{color:#c0c2bd}
+.nav button.active{color:#78aaff}
+.player{background:#3b3d3f;color:#f2f2ee;border-color:var(--vk-line)}
+.player button{color:#f2f2ee}
+.cover{background:#292b2d}
+.actions{border-top-color:var(--vk-line)}
+.actions button,.actions span{color:#c0c2bd}
+.wall-video{background:#292b2d}
+.postava,.small-avatar,.avatar{background:#55595c}
+.profile-btn{background:#292b2d;border-color:var(--vk-line)}
+.top-avatar{background:#55595c}
+.navicon svg{stroke:currentColor}
+.login-card{background:#3b3d3f;color:#f2f2ee}
+.login p,.login .muted,.login .status{color:#c0c2bd}
+.story-name{color:#c0c2bd}
+.clip-player-slot{background:#202224}
+@media(min-width:681px){.app{box-shadow:0 0 0 1px rgba(255,255,255,.08)}}
 </style></head><body>
 <section id="login" class="login"><div class="login-card"><div class="login-logo">VK</div><h1>VK Mini Client</h1><p>VK внутри Telegram Mini App.<br>Войдите через VK ID.</p><button id="loginBtn" class="login-btn">Войти через VK ID</button><div id="status" class="status"></div></div></section>
 <main id="app" class="app hidden"><header class="top"><div class="brand"><div class="vkmark">VK</div><span>VK</span></div><div class="top-actions"><button class="iconbtn" onclick="openSearch()" aria-label="Поиск">⌕</button><button class="profile-btn" onclick="openProfile()"><img id="topAvatar" class="top-avatar" alt=""></button></div></header><div class="content">
