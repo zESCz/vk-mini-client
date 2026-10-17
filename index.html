@@ -20,38 +20,51 @@ $('loginBtn').onclick=loginVK;
 async function loginVK(){try{status.textContent='Открываем VK ID…';const cv=sessionStorage.getItem('vk_code_verifier')||rnd(64),st=sessionStorage.getItem('vk_state')||rnd(32);sessionStorage.setItem('vk_code_verifier',cv);sessionStorage.setItem('vk_state',st);const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(cv));const challenge=btoa(String.fromCharCode(...new Uint8Array(digest))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');const q=new URLSearchParams({client_id:APP_ID,response_type:'code',redirect_uri:REDIRECT_URL,scope:VK_SCOPE,state:st,code_challenge:challenge,code_challenge_method:'s256'});location.assign('https://id.vk.ru/authorize?'+q.toString())}catch(e){status.textContent='Ошибка входа: '+(e.message||e)}}
 function access(){return localStorage.getItem('vk_access_token')||''}
 function clearSession(){localStorage.removeItem('vk_user');localStorage.removeItem('vk_access_token');sessionStorage.removeItem('vk_access_token');sessionStorage.removeItem('vk_state');sessionStorage.removeItem('vk_code_verifier')}
-async function api(method,params={}) {
+let jsonpSeq=0;
+// VK API вызывается из браузера: пользовательский access_token может быть привязан к IP клиента.
+// Серверный proxy меняет исходящий IP и вызывает VK API error 5 / subcode 1130.
+function api(method,params={}) {
   const token=access();
-  if(!token) throw Error('Нет авторизации');
-  let response;
-  try {
-    response=await fetch('/api/vk',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Accept':'application/json'},
-      body:JSON.stringify({method,params,access_token:token})
-    });
-  } catch(e) {
-    throw Error('Не удалось связаться с серверным API /api/vk: '+(e?.message||'сетевая ошибка'));
-  }
-  let data;
-  try { data=await response.json(); }
-  catch { throw Error('Серверный API вернул некорректный JSON (HTTP '+response.status+')'); }
-  if(data?.error) {
-    const info=data.error;
-    const code=Number(info.error_code||0);
-    const subcode=Number(info.error_subcode||0);
-    const message=info.error_msg||info.message||String(info);
-    const e=Error((code?'VK API, код '+code+(subcode?', подкод '+subcode:'')+': ':'API: ')+message);
-    e.vkCode=code;
-    e.vkSubcode=subcode;
-    e.httpStatus=response.status;
-    throw e;
-  }
-  if(!response.ok) throw Error('Серверный API: HTTP '+response.status);
-  if(!data||!Object.prototype.hasOwnProperty.call(data,'response')) {
-    throw Error('Серверный API не вернул поле response');
-  }
-  return data.response;
+  if(!token) return Promise.reject(Error('Нет авторизации'));
+  return new Promise((resolve,reject)=>{
+    const name='__vk_jsonp_'+Date.now()+'_'+(++jsonpSeq);
+    const script=document.createElement('script');
+    const q=new URLSearchParams({...params,access_token:token,v:'5.199',callback:name});
+    let done=false;
+    const timer=setTimeout(()=>finish(Error('VK API: тайм-аут запроса')),15000);
+    function cleanup(){
+      clearTimeout(timer);
+      try { delete window[name]; } catch(_) { window[name]=undefined; }
+      script.remove();
+    }
+    function finish(err,data){
+      if(done) return;
+      done=true;
+      cleanup();
+      err?reject(err):resolve(data);
+    }
+    window[name]=d=>{
+      if(d?.error){
+        const info=d.error;
+        const code=Number(info.error_code||0);
+        const subcode=Number(info.error_subcode||0);
+        const message=info.error_msg||('VK API error '+code);
+        const e=Error((code?'VK API, код '+code+(subcode?', подкод '+subcode:'')+': ':'')+message);
+        e.vkCode=code;
+        e.vkSubcode=subcode;
+        finish(e);
+        return;
+      }
+      if(!d||!Object.prototype.hasOwnProperty.call(d,'response')){
+        finish(Error('VK API: получен некорректный ответ'));
+        return;
+      }
+      finish(null,d.response);
+    };
+    script.onerror=()=>finish(Error('VK API: не удалось загрузить ответ. Проверьте сеть и доступность VK.'));
+    script.src='https://api.vk.ru/method/'+encodeURIComponent(method)+'?'+q.toString();
+    document.head.appendChild(script);
+  });
 }
 function esc(x){return String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function showUser(raw){const u=raw?.user||raw||{},name=[u.first_name,u.last_name].filter(Boolean).join(' ')||'Пользователь VK',id=u.user_id||u.id||'',av=u.avatar||u.photo_200||'';$('homeName').textContent=name;$('profileName').textContent=name;$('profileId').textContent=id?'VK ID: '+id:'';if(av){$('topAvatar').src=av;$('profileAvatar').src=av}$('login').classList.add('hidden');$('app').classList.remove('hidden')}
