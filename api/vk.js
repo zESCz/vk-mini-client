@@ -2,6 +2,8 @@ const ALLOWED = new Set([
   "friends.get",
   "newsfeed.get",
   "messages.getConversations",
+  "messages.getHistory",
+  "messages.send",
   "audio.get",
   "video.get",
   "video.search",
