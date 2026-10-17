@@ -9,7 +9,7 @@
 <div id="player" class="player hidden"><button id="play" onclick="togglePlay()">▶</button><div class="player-main"><div id="ptitle" class="track-title"></div><div id="partist" class="track-sub"></div></div><button onclick="closePlayer()">×</button><audio id="audio"></audio></div><nav class="nav"><button class="active" onclick="go('home',this)"><span class="navicon">⌂</span>Главная</button><button onclick="go('friends',this)"><span class="navicon">♧</span>Друзья</button><button onclick="go('messages',this)"><span class="navicon">◉</span>Сообщения</button><button onclick="go('clips',this)"><span class="navicon">▶</span>Клипы</button></nav></main>
 <script>
 'use strict';
-const APP_ID='54798745',REDIRECT_URL='https://vk-mini-client.vercel.app/api/auth/vk/callback',$=id=>document.getElementById(id),status=$('status');
+const APP_ID='54798745',REDIRECT_URL=window.location.origin+'/api/auth/vk/callback',$=id=>document.getElementById(id),status=$('status');
 // Запрашиваем необходимые права, но не messages: поддержка VK подтвердила, что этот доступ не предоставляется.
 const VK_SCOPE='email phone friends video audio photos wall';
 if(window.Telegram?.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand()}
